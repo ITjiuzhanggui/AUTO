@@ -26,7 +26,7 @@ class DefHttpd(DefTestLog):
 
         for i in lines[
                  lines.index("httpd/httpd.sh\n"):
-                 lines.index("httpd-server\n")]:
+                 lines.index("Default-Httpd-Server\n")]:
 
             if i.startswith("Time taken for tests"):
                 num = re.findall("\d+\.?\d*", i)
@@ -77,7 +77,7 @@ class DefNginx(DefTestLog):
 
         for i in lines[
                  lines.index("nginx/nginx.sh\n"):
-                 lines.index("nginx-server\n")]:
+                 lines.index("Default-Nginx-Server\n")]:
 
             if i.startswith("Time taken for tests"):
                 num = re.findall("\d+\.?\d*", i)
@@ -127,7 +127,7 @@ class DefMemcached(DefTestLog):
 
         for i in lines[
                  lines.index("memcached/memcached.sh\n"):
-                 lines.index("memcached-server\n")]:
+                 lines.index("Default-Memcached-Server\n")]:
 
             if i.startswith("Sets"):
                 num = re.findall("---|\d+\.?\d*", i)
@@ -171,7 +171,7 @@ class DefRedis(DefTestLog):
 
         for i in lines[
                  lines.index("redis/redis.sh\n"):
-                 lines.index("clr-redis\n")]:
+                 lines.index("Default-Redis-Server\n")]:
             influs_defaut.append(i)
 
         for i in influs_defaut[
@@ -386,8 +386,8 @@ class DefPhp(DefTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("[php] [INFO] Test clear docker image:\n"):
-                 lines.index("[php] [INFO] Clr-Php-server:\n")]:
+                 lines.index("php/php.sh\n"):
+                 lines.index("Default-Php-Server\n")]:
 
             if i.startswith("Score"):
                 num = re.findall("\d+\.?\d*", i)
@@ -409,7 +409,7 @@ class DefPython(DefTestLog):
 
         for i in lines[
                  lines.index("python/python.sh\n"):
-                 lines.index("[python] [INFO] default-Python-server:\n")]:
+                 lines.index("Default-Python-Server\n")]:
 
             if i.startswith("Totals"):
                 num = re.findall("\d+\.?\d*", i)
@@ -432,8 +432,8 @@ class DefGoalng(DefTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("[golang] [INFO] Test clear docker image:\n"):
-                 lines.index("[golang] [INFO] Clr-Golang-server:\n")]:
+                 lines.index("golang/golang.sh\n"):
+                 lines.index("Default-Golang-Server\n")]:
 
             if i.startswith("BenchmarkBuild"):
                 num = re.findall("\d+\.?\d* ns/op", i)
@@ -476,7 +476,7 @@ class DefNode(DefTestLog):
 
         for i in lines[
                  lines.index("node/node.sh\n"):
-                 lines.index("[node] [INFO] default-Node-server:\n")]:
+                 lines.index("Default-Node-Server\n")]:
 
             if i.startswith("Score"):
                 num = re.findall("\d+\.?\d*", i)
