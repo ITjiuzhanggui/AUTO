@@ -3,12 +3,14 @@ from core.abstract import Global
 from pprint import pprint
 import re
 import json
-
+from conf import ConfManagement
 
 class StatusDefLog(Global):
 
     def __init__(self):
         super(StatusDefLog, self).__init__()
+        status_logpath = ConfManagement().get_ini("STATUS_LOG_PATH")
+        self.status_log = self.read_logs(status_logpath)
         with open('data.json', 'r') as f:
             self.data = json.load(f)
 

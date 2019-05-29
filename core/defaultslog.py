@@ -3,13 +3,14 @@ import json
 from core.abstract import Global
 import re
 
-
+from conf import ConfManagement
 
 class DefTestLog(Global):
 
     def __init__(self):
-
         super(DefTestLog, self).__init__()
+        test_logpath = ConfManagement().get_ini("TEST_LOG_PATH")
+        self.test_log = self.read_logs(test_logpath)
         with open('data.json', 'r') as f:
             self.data = json.load(f)
 

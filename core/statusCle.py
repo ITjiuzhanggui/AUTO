@@ -4,12 +4,14 @@ from core.abstract import Global
 from pprint import pprint
 import re
 
+from conf import ConfManagement
 
 class StatusLog(Global):
 
     def __init__(self):
-
         super(StatusLog, self).__init__()
+        test_logpath = ConfManagement().get_ini("STATUS_LOG_PATH")
+        self.status_log = self.read_logs(test_logpath)
         with open('data.json', 'r') as f:
             self.data = json.load(f)
         self.status_version()
