@@ -24,8 +24,8 @@ class ClrHttpd(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("[httpd] [INFO] Test clear docker image:\n"):
-                 lines.index("clr-httpd-server\n")]:
+                 lines.index("Default-Httpd-Server\n"):
+                 lines.index("Clr-Httpd-Server\n")]:
 
             if i.startswith("Time taken for tests"):
                 num = re.findall("\d+\.?\d*", i)
@@ -74,8 +74,8 @@ class ClrNginx(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("[nginx] [INFO] Test clear docker image:\n"):
-                 lines.index("clr-nginx-server\n")]:
+                 lines.index("Default-Nginx-Server\n"):
+                 lines.index("Clr-Nginx-Server\n")]:
 
             if i.startswith("Time taken for tests"):
                 num = re.findall("\d+\.?\d*", i)
@@ -124,8 +124,8 @@ class ClrMemcached(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("[memcached] [INFO] Test clear docker image:\n"):
-                 lines.index("cl-memcached-server\n")]:
+                 lines.index("Default-Memcached-Server\n"):
+                 lines.index("Clr-Memcached-Server\n")]:
 
             if i.startswith("Sets"):
                 num = re.findall("---|\d+\.?\d*", i)
@@ -168,8 +168,8 @@ class ClrRedis(CrlTestLog):
         influs_defaut = []
 
         for i in lines[
-                 lines.index("[redis] [INFO] Test clear docker image:\n"):
-                 lines.index("clr-redis\n")]:
+                 lines.index("Default-Redis-Server\n"):
+                 lines.index("Clr-Redis-Server\n")]:
             influs_defaut.append(i)
 
         for i in influs_defaut[
@@ -384,8 +384,8 @@ class ClrPhp(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("[php] [INFO] Test clear docker image:\n"):
-                 lines.index("[php] [INFO] Clr-Php-server:\n")]:
+                 lines.index("Default-Php-Server\n"):
+                 lines.index("Clr-Php-Server\n")]:
 
             if i.startswith("Score"):
                 num = re.findall("\d+\.?\d*", i)
@@ -406,8 +406,8 @@ class ClrPython(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("[python] [INFO] Test clear docker image:\n"):
-                 lines.index("[python] [INFO] Clr-Python-server:\n")]:
+                 lines.index("Default-Python-Server\n"):
+                 lines.index("Clr-Python-Server\n")]:
 
             if i.startswith("Totals"):
                 num = re.findall("\d+\.?\d*", i)
@@ -430,8 +430,8 @@ class ClrGoalng(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("[golang] [INFO] Test clear docker image:\n"):
-                 lines.index("[golang] [INFO] Clr-Golang-server:\n")]:
+                 lines.index("Default-Golang-Server\n"):
+                 lines.index("Clr-Golang-Server\n")]:
 
             if i.startswith("BenchmarkBuild"):
                 num = re.findall("\d+\.?\d* ns/op", i)
@@ -473,8 +473,8 @@ class ClrNode(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("[node] [INFO] Test clear docker image:\n"):
-                 lines.index("php/php.sh\n")]:
+                 lines.index("Default-Node-Server\n"):
+                 lines.index("Clr-Node-Server\n")]:
 
             if i.startswith("Score"):
                 num = re.findall("\d+\.?\d*", i)
