@@ -5,30 +5,33 @@ import re
 import json
 from pprint import pprint
 
-# for i in range(5):
-#     os.system("make tests > logs/%s.logs 2>&1 "%str(i))
-
-# for i in range(1):
-#      os.system("make status > /home/cle-test/status/%s.logs 2>&1 "%str(i))
-
-
 data = {
-    "default": {
-        "httpd": {}, "nginx": {}, "memcached": {}, "redis": {}, "php": {}, "python": {}, "golang": {}, "node": {}
-    },
+    "default":
+        {
+            "httpd": {}, "nginx": {}, "memcached": {}, "redis": {}, "php": {}, "python": {}, "golang": {},
+            "node": {}, "openjdk": {}, "ruby": {}, "tensorflow": {},
+        },
 
-    "clear": {
-        "httpd": {}, "nginx": {}, "memcached": {}, "redis": {}, "php": {}, "python": {}, "golang": {}, "node": {}
-    },
+    "clear":
+        {
+            "httpd": {}, "nginx": {}, "memcached": {}, "redis": {}, "php": {}, "python": {}, "golang": {},
+            "node": {}, "openjdk": {}, "ruby": {}, "tensorflow": {},
+        },
 
-    "status_def": {
-        "golang": {}, "nginx": {}, "memcached": {}, "redis": {}, "php": {}, "python": {}, "node": {}
-    },
+    "status_def":
+        {
+            "httpd": {}, "golang": {}, "nginx": {}, "memcached": {}, "redis": {}, "php": {}, "python": {},
+            "node": {}, "openjdk": {}, "ruby": {}, "tensorflow": {},
+        },
 
-    "ststus_Clr": {
-        "golang": {}, "nginx": {}, "memcached": {}, "redis": {}, "php": {}, "python": {}, "node": {}
-    }
+    "status_Clr":
+        {
+            "clearlinux_version": {}, "httpd": {}, "golang": {}, "nginx": {}, "memcached": {}, "redis": {},
+            "php": {}, "python": {}, "node": {}, "openjdk": {}, "ruby": {}, "tensorflow": {},
+        }
 }
+
+"""default test_long"""
 
 
 def read_logs(file_name):
@@ -36,10 +39,9 @@ def read_logs(file_name):
         return f.readlines()
 
 
-def get_case_list():
-    case_list = ["golang", "nginx", "memcached", "redis", "php", "python", "node"]
-    for case in case_list:
-        return case
+def read_status_logs(status_log):
+    with open(status_log, "r", encoding="utf-8") as s:
+        return s.readlines()
 
 
 def default_from_httpd(lines):
@@ -127,13 +129,6 @@ def default_from_memcached(lines):
             num[-1] += " KB/sec"
             data.get("default").get("memcached").update(
                 {"Gets": num[-2:]})
-
-        # if i.startswith("Waits"):
-        #     # print(i)
-        #     num = re.findall("---|\d+\.?\d*", i)
-        #     num[-1] += " KB/sec"
-        #     data.get("default_").get("memcached").update(
-        #         {"Waits": num[-2:]})
 
         if i.startswith("Totals"):
             num = re.findall("---|\d+\.?\d*", i)
@@ -288,7 +283,7 @@ def default_from_redis(lines):
 def default_from_php(lines):
     """php unit tests analysis"""
 
-    for i in lines[lines.index("php/php.sh\n"):lines.index("[php] [INFO] default-Php-server:\n")]:
+    for i in lines[lines.index("php/php.sh\n"):lines.index("[php] [INFO] Test clear docker image:\n")]:
 
         if i.startswith("Score"):
             num = re.findall("\d+\.?\d*", i)
@@ -300,7 +295,7 @@ def default_from_php(lines):
 def default_from_python(lines):
     """python unit tests analysis"""
 
-    for i in lines[lines.index("python/python.sh\n"):lines.index("[python] [INFO] Test clear docker image:\n")]:
+    for i in lines[lines.index("python/python.sh\n"):lines.index("Default-Python-Server\n")]:
 
         if i.startswith("Totals"):
             num = re.findall("\d+\.?\d*", i)
@@ -314,7 +309,10 @@ def default_from_python(lines):
 def default_from_golang(lines):
     """golang unit tests analysis"""
 
-    for i in lines[lines.index("golang/golang.sh\n"):lines.index("[golang] [INFO] default-Golang-server:\n")]:
+    for i in lines[
+             lines.index("golang/golang.sh\n"):
+             lines.index("Default-Golang-Server\n")]:
+
         if i.startswith("BenchmarkBuild"):
             num = re.findall("\d+\.?\d* ns/op", i)
             data.get("default").get("golang").update(
@@ -342,7 +340,8 @@ def default_from_golang(lines):
 
 def default_from_nodejs(lines):
     """nodejs unit tests analysis"""
-    for i in lines[lines.index("node/node.sh\n"):lines.index("[node] [INFO] Test clear docker image:\n")]:
+    for i in lines[lines.index("[node] [INFO] Test docker hub official image first:\n"):lines.index(
+            "[node] [INFO] Test clear docker image:\n")]:
 
         if i.startswith("Score"):
             num = re.findall("\d+\.?\d*", i)
@@ -351,9 +350,120 @@ def default_from_nodejs(lines):
             )
 
 
+def default_from_openjdk(lines):
+    """openjdk unit tests analysis"""
+    for i in lines[lines.index("[openjdk] [INFO] Test clear docker image first:\n"):
+    lines.index("Clr-Openjdk-Server\n")]:
+
+        if i.startswith("o.s.MyBenchmark.testMethod"):
+            num = re.findall("\d+\.?\d+", i)
+            data.get("default").get("openjdk").update(
+                {"MyBenchmark.testMethod:Score": num[1]}
+            )
+
+        if i.startswith("o.s.MyBenchmark.testMethod"):
+            num = re.findall("\d+\.?\d+", i)
+            data.get("default").get("openjdk").update(
+                {"o.s.MyBenchmark.testMethod:Error": num[-1]}
+            )
+
+
+def default_from_ruby(lines):
+    """ruby unit tests analysis"""
+
+    for i in lines[lines.index("ruby/ruby.sh\n"):
+    lines.index("Default-Ruby-Server\n")]:
+
+        if i.endswith("s/i)\n"):
+            if "app_answer" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_answer": num[-2]}
+                )
+        if i.endswith("s/i)\n"):
+            if "app_aobench" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_aobench": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_erb" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_erb": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_factorial" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_factorial": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_fib" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_fib": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_lc_fizzbuzz" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_lc_fizzbuzz": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_mandelbrot" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_mandelbrot": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_pentomino" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_pentomino": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_raise" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_raise": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_strconcat" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_strconcat": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_tak" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_tak": num[-2]}
+
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_tarai" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("default").get("ruby").update(
+                    {"app_tarai": num[-2]}
+                )
+
+
+"""clearlinux test_log"""
+
+
 def clr_from_httpd(lines):
     """clearlinux unit tests analysis"""
-
     for i in lines[lines.index("[httpd] [INFO] Test clear docker image:\n"):lines.index("clr-httpd-server\n")]:
         if i.startswith("Time taken for tests"):
             num = re.findall("\d+\.?\d*", i)
@@ -437,13 +547,6 @@ def clr_from_memcached(lines):
             num[-1] += " KB/sec"
             data.get("clear").get("memcached").update(
                 {"Gets": num[-2:]})
-
-        # if i.startswith("Waits"):
-        #     # print(i)
-        #     num = re.findall("---|\d+\.?\d*", i)
-        #     num[-1] += " KB/sec"
-        #     data.get("default_").get("memcached").update(
-        #         {"Waits": num[-2:]})
 
         if i.startswith("Totals"):
             num = re.findall("---|\d+\.?\d*", i)
@@ -597,22 +700,9 @@ def clr_from_redis(lines):
 
 def clr_from_php(lines):
     """clearlinux unit tests analysis"""
-    # start = 0
-    # end_list = []
-    # for item in lines:
-    #     if item.startswith("[php] [INFO] Test clear docker"):
-    #         start = lines.index(item)
-    # for item in lines:
-    #     if re.findall(".*\/*\.sh", item) and lines.index(item) > start:
-    #         end_list.append(lines.index(item))
-    # for i in lines[start:end_list[0]]:
-    #     if i.startswith("Score"):
-    #         num = re.findall("\d+\.?\d*", i)
-    #         data.get("clear").get("php").update(
-    #             {"Score": num[0]}
-    #         )
+
     for i in lines[
-             lines.index("[php] [INFO] Test clear docker image:\n"):lines.index("[php] [INFO] Clr-Php-server:\n")]:
+             lines.index("[php] [INFO] Test clear docker image:\n"):lines.index("python/python.sh\n")]:
 
         if i.startswith("Score"):
             num = re.findall("\d+\.?\d*", i)
@@ -623,24 +713,8 @@ def clr_from_php(lines):
 
 def clr_from_python(lines):
     """clearlinux unit tests analysis"""
-    # start = 0
-    # end_list = []
-    # for item in lines:
-    #     if item.startswith("[python] [INFO] Test clear docker image"):
-    #         start = lines.index(item)
-    # for item in lines:
-    #     if re.findall(".*\/*\.sh", item) and lines.index(item) > start:
-    #         end_list.append(lines.index(item))
-    # for i in lines[start:end_list[0]]:
-    #     if i.startswith("Totals"):
-    #         num = re.findall("\d+\.?\d*", i)
-    #         num[0] = {"minimum": num[0]}
-    #         num[1] = {"average": num[1]}
-    #         data.get("clear").get("python").update(
-    #             {"Totals": num}
-    #         )
-    for i in lines[lines.index("[python] [INFO] Test clear docker image:\n"):lines.index(
-            "[python] [INFO] Clr-Python-server:\n")]:
+
+    for i in lines[lines.index("[python] [INFO] Test clear docker image:\n"):lines.index("Clr-Python-Server\n")]:
 
         if i.startswith("Totals"):
             num = re.findall("\d+\.?\d*", i)
@@ -653,8 +727,10 @@ def clr_from_python(lines):
 
 def clr_from_golang(lines):
     """clearlinux unit tests analysis"""
-    for i in lines[lines.index("[golang] [INFO] Test clear docker image:\n"):lines.index(
-            "[golang] [INFO] Clr-Golang-server:\n")]:
+
+    for i in lines[lines.index("[golang] [INFO] Test clear docker image:\n"):
+    lines.index("Clr-Golang-Server\n")]:
+
         if i.startswith("BenchmarkBuild"):
             num = re.findall("\d+\.?\d* ns/op", i)
             data.get("clear").get("golang").update(
@@ -684,7 +760,8 @@ def clr_from_nodejs(lines):
     """clearlinux unit tests analysis"""
 
     for i in lines[
-             lines.index("[node] [INFO] Test clear docker image:\n"):lines.index("[node] [INFO] Clr-Node-server:\n")]:
+             lines.index("[node] [INFO] Test clear docker image:\n"):lines.index(
+                 "[openjdk] == openjdk unit test ==\n")]:
 
         if i.startswith("Score"):
             num = re.findall("\d+\.?\d*", i)
@@ -693,76 +770,912 @@ def clr_from_nodejs(lines):
             )
 
 
-def get_status(key):
-    status_file_name = ""
-    case_list = [key, "clearlinux/%s" % key, "default", "clearlinux"]
-    part_lines = []
+def clr_form_openjdk(lines):
+    """"""
+    for i in lines[
+             lines.index("openjdk/openjdk.sh\n"):
+             lines.index("Default-Openjdk-Server\n")]:
 
-    with open(status_file_name, encoding='utf-8', ) as txtfile:
-        lines = txtfile.readlines()
-        for lineno, line in enumerate(lines):
-            if key in line and line.split()[0] == key:
-                key_lineno = lineno
-                for index in range(key_lineno, key_lineno + 20):
-                    part_lines.append(lines[index])
-                    if lines[index].startswith("\n"):
-                        break
+        if i.startswith("o.s.MyBenchmark.testMethod"):
+            num = re.findall("\d+\.?\d+", i)
+            data.get("clear").get("openjdk").update(
+                {"MyBenchmark.testMethod:Score": num[1]}
+            )
 
-    for line in part_lines:
-        for case in case_list:
-            if line.startswith(case):
-                line_split = line.split()
-                if line_split[1] == "latest":
-                    if line_split[0] == key:
-                        data.get("status_def")[key].update({
-                            key: line_split[-1][0:3]
-                        })
-                    if line_split[0] == "clearlinux/%s" % key:
-                        data.get("ststus_Clr")[key].update({
-                            "clearlinux/%s" % key: line_split[-1][0:3]
-                        })
+        if i.startswith("o.s.MyBenchmark.testMethod"):
+            num = re.findall("\d+\.?\d+", i)
+            data.get("clear").get("openjdk").update(
+                {"o.s.MyBenchmark.testMethod:Error": num[-1]}
+            )
 
-                if line_split[-3] == "Size:":
-                    if line_split[0] == "default":
-                        data.get("status_def")[key].update({
-                            "default base layer Size": line_split[-2]
-                        })
-                        data.get("status_def")[key].update({
-                            "default microservice layer Size": line_split[-2]
-                        })
-                    if line_split[0] == "clearlinux":
-                        data.get("ststus_Clr")[key].update({
-                            "clearlinux base layer Size": line_split[-2]
-                        })
-                        data.get("ststus_Clr")[key].update({
-                            "clearlinux microservice layer Size": line_split[-2]
-                        })
+
+def clr_from_ruby(lines):
+    """ruby unit tests analysis"""
+
+    for i in lines[lines.index("[ruby] [INFO] Test clear docker image:\n"):
+    lines.index("Clr-Ruby-Server\n")]:
+        if i.endswith("s/i)\n"):
+            if "app_answer" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_answer": num[-2]}
+                )
+        if i.endswith("s/i)\n"):
+            if "app_aobench" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_aobench": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_erb" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_erb": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_factorial" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_factorial": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_fib" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_fib": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_lc_fizzbuzz" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_lc_fizzbuzz": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_mandelbrot" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_mandelbrot": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_pentomino" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_pentomino": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_raise" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_raise": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_strconcat" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_strconcat": num[-2]}
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_tak" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_tak": num[-2]}
+
+                )
+
+        if i.endswith("s/i)\n"):
+            if "app_tarai" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("clear").get("ruby").update(
+                    {"app_tarai": num[-2]}
+                )
+
+
+"""STATUS_default_log"""
+
+
+def StaDefHttpd(lines):
+    """default test_status_httpd long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("httpd"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+        if i.startswith("httpd"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_def").get("httpd").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("default base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("httpd").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("default microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("httpd").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaDefNginx(lines):
+    """default test_status_nginx long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("nginx"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("nginx"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_def").get("nginx").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("default base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("nginx").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("default microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("nginx").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaDefMemcached(lines):
+    """default test_status_nginx long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("memcached"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("memcached"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_def").get("memcached").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("default base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("memcached").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("default microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("memcached").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaDefRedis(lines):
+    """default test_status_redis long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("redis"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("redis"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_def").get("redis").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("default base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("redis").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("default microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("redis").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaDefPhp(lines):
+    """default test_status_php long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("php"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("php"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_def").get("php").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("default base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("php").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("default microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("php").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaDefPython(lines):
+    """default test_status_python long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("python"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("python"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_def").get("python").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("default base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("python").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("default microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("python").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaDefGolang(lines):
+    """default test_status_golang long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("golang"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("golang"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_def").get("golang").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("default base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("golang").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("default microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("golang").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaDefNode(lines):
+    """"default test_status_node long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("node"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("node"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_def").get("node").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("default base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("node").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("default microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("node").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaDefOpenjdk(lines):
+    """default test_status_openjdk long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("openjdk"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("openjdk"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_def").get("openjdk").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("default base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("openjdk").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("default microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("openjdk").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaDefRuby(lines):
+    """clearlinux test_status_ruby long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("ruby"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("ruby"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_def").get("ruby").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("default base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("ruby").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("default microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_def").get("ruby").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+"""STATUS_clearlinux_log"""
+
+
+def StaClrHttpd(lines):
+    """clearlinux test_status_httpd long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("httpd"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("clearlinux/httpd"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_Clr").get("httpd").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("clearlinux base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("httpd").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("clearlinux microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("httpd").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaClrNginx(lines):
+    """clearlinux test_status_nginx long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("nginx"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("clearlinux/nginx"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_Clr").get("nginx").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("clearlinux base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("nginx").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("clearlinux microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("nginx").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaClrMemcached(lines):
+    """clearlinux test_status_nginx long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("memcached"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("clearlinux/memcached"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_Clr").get("memcached").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("clearlinux base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("memcached").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("clearlinux microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("memcached").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaClrRedis(lines):
+    """default test_status_redis long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("redis"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("clearlinux/redis"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_Clr").get("redis").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("clearlinux base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("redis").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("clearlinux microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("redis").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaClrPhp(lines):
+    """default test_status_php long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("php"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("clearlinux/php"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_Clr").get("php").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("clearlinux base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("php").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("clearlinux microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("php").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaClrPython(lines):
+    """clearlinux test_status_python long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("python"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("clearlinux/python"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_Clr").get("python").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("clearlinux base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("python").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("clearlinux microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("python").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaClrGolang(lines):
+    """clearlinux test_status_golang long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("golang"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("clearlinux/golang"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_Clr").get("golang").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("clearlinux base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("golang").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("clearlinux microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("golang").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaClrNode(lines):
+    """default test_status_node long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("node"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("clearlinux/node"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_Clr").get("node").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("clearlinux base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("node").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("clearlinux microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("node").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaClrOpenjdk(lines):
+    """clearlinux test_status_openjdk long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("openjdk"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("clearlinux/openjdk"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_Clr").get("openjdk").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("clearlinux base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("openjdk").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("clearlinux microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("openjdk").update(
+                {"MicroService_layer": num[0]}
+            )
+
+
+def StaClrRuby(lines):
+    """clearlinux test_status_openjdk long analysis"""
+
+    if_n = True
+    for i in lines:
+        if i.startswith("ruby"):
+            if "latest" in i:
+                start = lines.index(i)
+
+    while if_n:
+        for i in lines[start:]:
+            if i == '\n':
+                if_n = False
+                end = lines[start:].index(i)
+
+    for i in lines[start:end + start]:
+
+        if i.startswith("clearlinux/ruby"):
+            if "latest" in i:
+                num = re.findall("\d+\.?\d*", i)
+                data.get("status_Clr").get("ruby").update(
+                    {"Total": num[-1] + "MB"}
+                )
+
+        if i.startswith("clearlinux base layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("ruby").update(
+                {"Base_Layer": num[0]}
+            )
+
+        if i.startswith("clearlinux microservice added layer Size:"):
+            num = re.findall("\d+\.?\d*", i)
+            data.get("status_Clr").get("ruby").update(
+                {"MicroService_layer": num[0]}
+            )
 
 
 def main():
-    file_name = 'Test_code.logs'
-    lines = read_logs(file_name)
-    default_from_httpd(lines)
-    default_from_nginx(lines)
-    default_from_memcached(lines)
-    default_from_redis(lines)
-    default_from_php(lines)
-    default_from_python(lines)
-    default_from_golang(lines)
-    default_from_nodejs(lines)
-    clr_from_httpd(lines)
-    clr_from_nginx(lines)
-    clr_from_memcached(lines)
-    clr_from_redis(lines)
-    clr_from_php(lines)
-    clr_from_golang(lines)
-    clr_from_python(lines)
-    clr_from_nodejs(lines)
-    a = get_case_list()
-    get_status()
+    file_name = 'test_LOG.log'
+    status_log = 'status_LOG.log'
+    test = read_logs(file_name)
+    status = read_status_logs(status_log)
+    default_from_httpd(test)
+    default_from_nginx(test)
+    default_from_memcached(test)
+    default_from_redis(test)
+    default_from_php(test)
+    default_from_python(test)
+    default_from_golang(test)
+    default_from_nodejs(test)
+    default_from_openjdk(test)
+    default_from_ruby(test)
 
-    # with open('data_NEW.json', 'w') as f:
-    #     json.dump(data, f)
+    clr_from_httpd(test)
+    clr_from_nginx(test)
+    clr_from_memcached(test)
+    clr_from_redis(test)
+    clr_from_php(test)
+    clr_from_golang(test)
+    clr_from_python(test)
+    clr_from_nodejs(test)
+    clr_form_openjdk(test)
+    clr_from_ruby(test)
+
+
+    StaDefHttpd(status)
+    StaDefNginx(status)
+    StaDefMemcached(status)
+    StaDefRedis(status)
+    StaDefPhp(status)
+    StaDefPython(status)
+    StaDefGolang(status)
+    StaDefNode(status)
+    StaDefOpenjdk(status)
+    StaDefRuby(status)
+
+    StaClrHttpd(status)
+    StaClrNginx(status)
+    StaClrMemcached(status)
+    StaClrRedis(status)
+    StaClrPhp(status)
+    StaClrPython(status)
+    StaClrGolang(status)
+    StaClrNode(status)
+    StaClrOpenjdk(status)
+    StaClrRuby(status)
+
+    with open('data_NEW.json', 'w') as f:
+        json.dump(data, f)
 
 
 if __name__ == '__main__':
