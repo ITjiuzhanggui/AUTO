@@ -1,14 +1,16 @@
 import json
 import re
 from core.abstract import Global
-from pprint import pprint
+from conf import ConfManagement
 
 
-class CrlTestLog(Global):
+class ClrTestLog(Global):
 
     def __init__(self):
+        super(ClrTestLog, self).__init__()
+        test_logpath = ConfManagement().get_ini("TEST_LOG_PATH")
+        self.test_log = self.read_logs(test_logpath)
 
-        super(CrlTestLog, self).__init__()
         with open('data.json', 'r') as f:
             self.data = json.load(f)
 
@@ -16,7 +18,7 @@ class CrlTestLog(Global):
         pass
 
 
-class ClrHttpd(CrlTestLog):
+class ClrHttpd(ClrTestLog):
     """clearlinux test_case httpd analysis"""
 
     def serialization(self):
@@ -24,7 +26,7 @@ class ClrHttpd(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("Default-Httpd-Server\n"):
+                 lines.index("[httpd] [INFO] Test clear docker image:\n"):
                  lines.index("Clr-Httpd-Server\n")]:
 
             if i.startswith("Time taken for tests"):
@@ -62,11 +64,12 @@ class ClrHttpd(CrlTestLog):
                 data.get("clear").get("httpd").update(
                     {"Transfer rate": num[0]}
                 )
+
         with open("data.json", 'w') as f:
             json.dump(data, f)
 
 
-class ClrNginx(CrlTestLog):
+class ClrNginx(ClrTestLog):
     """clearlinux test_case nginx analysis"""
 
     def serialization(self):
@@ -74,7 +77,7 @@ class ClrNginx(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("Default-Nginx-Server\n"):
+                 lines.index("[nginx] [INFO] Test clear docker image:\n"):
                  lines.index("Clr-Nginx-Server\n")]:
 
             if i.startswith("Time taken for tests"):
@@ -116,7 +119,7 @@ class ClrNginx(CrlTestLog):
             json.dump(data, f)
 
 
-class ClrMemcached(CrlTestLog):
+class ClrMemcached(ClrTestLog):
     """clearlinux test_case memcached analysis"""
 
     def serialization(self):
@@ -124,7 +127,7 @@ class ClrMemcached(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("Default-Memcached-Server\n"):
+                 lines.index("[memcached] [INFO] Test clear docker image:\n"):
                  lines.index("Clr-Memcached-Server\n")]:
 
             if i.startswith("Sets"):
@@ -141,13 +144,6 @@ class ClrMemcached(CrlTestLog):
                 data.get("clear").get("memcached").update(
                     {"Gets": num[-2:]})
 
-            # if i.startswith("Waits"):
-            #     # print(i)
-            #     num = re.findall("---|\d+\.?\d*", i)
-            #     num[-1] += " KB/sec"
-            #     data.get("default_").get("memcached").update(
-            #         {"Waits": num[-2:]})
-
             if i.startswith("Totals"):
                 num = re.findall("---|\d+\.?\d*", i)
                 self.exception_to_response(num, "clearlinux memcached:Totals")
@@ -159,7 +155,7 @@ class ClrMemcached(CrlTestLog):
             json.dump(data, f)
 
 
-class ClrRedis(CrlTestLog):
+class ClrRedis(ClrTestLog):
     """clearlinux  test_case redis analysis"""
 
     def serialization(self):
@@ -168,7 +164,7 @@ class ClrRedis(CrlTestLog):
         influs_defaut = []
 
         for i in lines[
-                 lines.index("Default-Redis-Server\n"):
+                 lines.index("[redis] [INFO] Test clear docker image:\n"):
                  lines.index("Clr-Redis-Server\n")]:
             influs_defaut.append(i)
 
@@ -376,7 +372,7 @@ class ClrRedis(CrlTestLog):
             json.dump(data, f)
 
 
-class ClrPhp(CrlTestLog):
+class ClrPhp(ClrTestLog):
     """clearlinux test_case php analysis"""
 
     def serialization(self):
@@ -384,7 +380,7 @@ class ClrPhp(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("Default-Php-Server\n"):
+                 lines.index("[php] [INFO] Test clear docker image:\n"):
                  lines.index("Clr-Php-Server\n")]:
 
             if i.startswith("Score"):
@@ -398,7 +394,7 @@ class ClrPhp(CrlTestLog):
             json.dump(data, f)
 
 
-class ClrPython(CrlTestLog):
+class ClrPython(ClrTestLog):
     """clearlinux test_case python analysis"""
 
     def serialization(self):
@@ -406,7 +402,7 @@ class ClrPython(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("Default-Python-Server\n"):
+                 lines.index("[python] [INFO] Test clear docker image:\n"):
                  lines.index("Clr-Python-Server\n")]:
 
             if i.startswith("Totals"):
@@ -422,7 +418,7 @@ class ClrPython(CrlTestLog):
             json.dump(data, f)
 
 
-class ClrGoalng(CrlTestLog):
+class ClrGoalng(ClrTestLog):
     """clearlinux test_case golang analysis"""
 
     def serialization(self):
@@ -430,7 +426,7 @@ class ClrGoalng(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("Default-Golang-Server\n"):
+                 lines.index("[golang] [INFO] Test clear docker image:\n"):
                  lines.index("Clr-Golang-Server\n")]:
 
             if i.startswith("BenchmarkBuild"):
@@ -465,7 +461,7 @@ class ClrGoalng(CrlTestLog):
             json.dump(data, f)
 
 
-class ClrNode(CrlTestLog):
+class ClrNode(ClrTestLog):
     """clearlinux test_case node analysis"""
 
     def serialization(self):
@@ -473,7 +469,7 @@ class ClrNode(CrlTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("Default-Node-Server\n"):
+                 lines.index("[node] [INFO] Test clear docker image:\n"):
                  lines.index("Clr-Node-Server\n")]:
 
             if i.startswith("Score"):
@@ -484,8 +480,146 @@ class ClrNode(CrlTestLog):
                     {"benchmark-node-octane": num[-1]}
                 )
 
-
         with open("data.json", 'w') as f:
             json.dump(data, f)
 
+
+class ClrOpenjdk(ClrTestLog):
+    """clearlinux test_case openjdk analysis"""
+
+    def serialization(self):
+        lines = self.test_log
+        data = self.data
+
+        for i in lines[
+                 lines.index("[openjdk] [INFO] Test clear docker image first:\n"):
+                 lines.index("Clr-Openjdk-Server\n")]:
+
+            if i.startswith("o.s.MyBenchmark.testMethod"):
+                num = re.findall("\d+\.?\d+", i)
+                self.exception_to_response(num, "clearlinux_openjdk:MyBenchmark.testMethod:Score")
+                data.get("clear").get("openjdk").update(
+                    {"MyBenchmark.testMethod:Score": num[1]}
+                )
+
+            if i.startswith("o.s.MyBenchmark.testMethod"):
+                num = re.findall("\d+\.?\d+", i)
+                self.exception_to_response(num, "clearlinux_openjdk:o.s.MyBenchmark.testMethod:Error")
+                data.get("clear").get("openjdk").update(
+                    {"o.s.MyBenchmark.testMethod:Error": num[-1]}
+                )
+
+        with open("data.json")as f:
+            json.dump(data, f)
+
+
+class ClrRuby(ClrTestLog):
+    """clearlinux test_case ruby analysis"""
+
+    def serialization(self):
+        lines = self.test_log
+        data = self.data
+
+        for i in lines[
+                 lines.index("[ruby] [INFO] Test docker hub official image first:\n"):
+                 lines.index("Clr-Ruby-Server\n")]:
+
+            if i.endswith("s/i)\n"):
+                if "app_answer" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_answer")
+                    data.get("clear").get("ruby").update(
+                        {"app_answer": num[-2]}
+                    )
+            if i.endswith("s/i)\n"):
+                if "app_aobench" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_aobench")
+                    data.get("clear").get("ruby").update(
+                        {"app_aobench": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_erb" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_erb")
+                    data.get("clear").get("ruby").update(
+                        {"app_erb": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_factorial" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_factorial")
+                    data.get("clear").get("ruby").update(
+                        {"app_factorial": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_fib" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_fib")
+                    data.get("clear").get("ruby").update(
+                        {"app_fib": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_lc_fizzbuzz" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_lc_fizzbuzz")
+                    data.get("clear").get("ruby").update(
+                        {"app_lc_fizzbuzz": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_mandelbrot" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_mandelbrot")
+                    data.get("clear").get("ruby").update(
+                        {"app_mandelbrot": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_pentomino" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_pentomino")
+                    data.get("clear").get("ruby").update(
+                        {"app_pentomino": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_raise" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_raise")
+                    data.get("clear").get("ruby").update(
+                        {"app_raise": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_strconcat" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_strconcat")
+                    data.get("clear").get("ruby").update(
+                        {"app_strconcat": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_tak" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_tak")
+                    data.get("clear").get("ruby").update(
+                        {"app_tak": num[-2]}
+
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_tarai" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "clearlinux_ruby:app_tarai")
+                    data.get("clear").get("ruby").update(
+                        {"app_tarai": num[-2]}
+                    )
+
+        with open("data.json", 'w') as f:
+            json.dump(data, f)
 

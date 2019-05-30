@@ -46,7 +46,10 @@ def read_status_logs(status_log):
 
 def default_from_httpd(lines):
     """httpd unit tests analysis"""
-    for i in lines[lines.index("httpd/httpd.sh\n"):lines.index("httpd-server\n")]:
+    for i in lines[
+             lines.index("httpd/httpd.sh\n"):
+             lines.index("Default-Httpd-Server\n")]:
+
         if i.startswith("Time taken for tests"):
             num = re.findall("\d+\.?\d*", i)
             data.get("default").get("httpd").update(
@@ -81,7 +84,9 @@ def default_from_httpd(lines):
 def default_from_nginx(lines):
     """nginx unit tests analysis"""
 
-    for i in lines[lines.index("nginx/nginx.sh\n"):lines.index("nginx-server\n")]:
+    for i in lines[
+             lines.index("nginx/nginx.sh\n"):
+             lines.index("Default-Nginx-Server\n")]:
 
         if i.startswith("Time taken for tests"):
             num = re.findall("\d+\.?\d*", i)
@@ -117,7 +122,10 @@ def default_from_nginx(lines):
 def default_from_memcached(lines):
     '''memcached unit tests analysis'''
 
-    for i in lines[lines.index("memcached/memcached.sh\n"):lines.index("memcached-server\n")]:
+    for i in lines[
+             lines.index("memcached/memcached.sh\n"):
+             lines.index("Default-Memcached-Server\n")]:
+
         if i.startswith("Sets"):
             num = re.findall("---|\d+\.?\d*", i)
             num[-1] += " KB/sec"
@@ -141,7 +149,10 @@ def default_from_redis(lines):
     """redis unit tests analysis"""
 
     influs_defaut = []
-    for i in lines[lines.index("redis/redis.sh\n"):lines.index("some-redis\n")]:
+    for i in lines[
+             lines.index("redis/redis.sh\n"):
+             lines.index("Default-Redis-Server\n")]:
+
         influs_defaut.append(i)
 
     for i in influs_defaut[
@@ -283,7 +294,9 @@ def default_from_redis(lines):
 def default_from_php(lines):
     """php unit tests analysis"""
 
-    for i in lines[lines.index("php/php.sh\n"):lines.index("[php] [INFO] Test clear docker image:\n")]:
+    for i in lines[
+             lines.index("php/php.sh\n"):
+             lines.index("Default-Php-Server\n")]:
 
         if i.startswith("Score"):
             num = re.findall("\d+\.?\d*", i)
@@ -295,7 +308,9 @@ def default_from_php(lines):
 def default_from_python(lines):
     """python unit tests analysis"""
 
-    for i in lines[lines.index("python/python.sh\n"):lines.index("Default-Python-Server\n")]:
+    for i in lines[
+             lines.index("python/python.sh\n"):
+             lines.index("Default-Python-Server\n")]:
 
         if i.startswith("Totals"):
             num = re.findall("\d+\.?\d*", i)
@@ -340,8 +355,9 @@ def default_from_golang(lines):
 
 def default_from_nodejs(lines):
     """nodejs unit tests analysis"""
-    for i in lines[lines.index("[node] [INFO] Test docker hub official image first:\n"):lines.index(
-            "[node] [INFO] Test clear docker image:\n")]:
+    for i in lines[
+             lines.index("node/node.sh\n"):
+             lines.index("Default-Node-Server\n")]:
 
         if i.startswith("Score"):
             num = re.findall("\d+\.?\d*", i)
@@ -352,8 +368,9 @@ def default_from_nodejs(lines):
 
 def default_from_openjdk(lines):
     """openjdk unit tests analysis"""
-    for i in lines[lines.index("[openjdk] [INFO] Test clear docker image first:\n"):
-    lines.index("Clr-Openjdk-Server\n")]:
+    for i in lines[
+             lines.index("openjdk/openjdk.sh\n"):
+             lines.index("Default-Openjdk-Server\n")]:
 
         if i.startswith("o.s.MyBenchmark.testMethod"):
             num = re.findall("\d+\.?\d+", i)
@@ -371,8 +388,9 @@ def default_from_openjdk(lines):
 def default_from_ruby(lines):
     """ruby unit tests analysis"""
 
-    for i in lines[lines.index("ruby/ruby.sh\n"):
-    lines.index("Default-Ruby-Server\n")]:
+    for i in lines[
+             lines.index("ruby/ruby.sh\n"):
+             lines.index("Default-Ruby-Server\n")]:
 
         if i.endswith("s/i)\n"):
             if "app_answer" in i:
@@ -464,7 +482,10 @@ def default_from_ruby(lines):
 
 def clr_from_httpd(lines):
     """clearlinux unit tests analysis"""
-    for i in lines[lines.index("[httpd] [INFO] Test clear docker image:\n"):lines.index("clr-httpd-server\n")]:
+    for i in lines[
+             lines.index("[httpd] [INFO] Test clear docker image:\n"):
+             lines.index("Clr-Httpd-Server\n")]:
+
         if i.startswith("Time taken for tests"):
             num = re.findall("\d+\.?\d*", i)
             data.get("clear").get("httpd").update(
@@ -499,7 +520,9 @@ def clr_from_httpd(lines):
 def clr_from_nginx(lines):
     """clearlinux unit test analysis"""
 
-    for i in lines[lines.index("[nginx] [INFO] Test clear docker image:\n"):lines.index("clr-nginx-server\n")]:
+    for i in lines[
+             lines.index("[nginx] [INFO] Test clear docker image:\n"):
+             lines.index("Clr-Nginx-Server\n")]:
 
         if i.startswith("Time taken for tests"):
             num = re.findall("\d+\.?\d*", i)
@@ -559,7 +582,9 @@ def clr_from_redis(lines):
     """clearlinux unit tests analysis"""
 
     influs_defaut = []
-    for i in lines[lines.index("[redis] [INFO] Test clear docker image:\n"):lines.index("clr-redis\n")]:
+    for i in lines[
+             lines.index("[redis] [INFO] Test clear docker image:\n"):
+             lines.index("Clr-Redis-Server\n")]:
         influs_defaut.append(i)
 
     for i in influs_defaut[
@@ -702,7 +727,8 @@ def clr_from_php(lines):
     """clearlinux unit tests analysis"""
 
     for i in lines[
-             lines.index("[php] [INFO] Test clear docker image:\n"):lines.index("python/python.sh\n")]:
+             lines.index("[php] [INFO] Test clear docker image:\n"):
+             lines.index("Clr-Php-Server\n")]:
 
         if i.startswith("Score"):
             num = re.findall("\d+\.?\d*", i)
@@ -714,13 +740,15 @@ def clr_from_php(lines):
 def clr_from_python(lines):
     """clearlinux unit tests analysis"""
 
-    for i in lines[lines.index("[python] [INFO] Test clear docker image:\n"):lines.index("Clr-Python-Server\n")]:
+    for i in lines[
+             lines.index("[python] [INFO] Test clear docker image:\n"):
+             lines.index("Clr-Python-Server\n")]:
 
         if i.startswith("Totals"):
             num = re.findall("\d+\.?\d*", i)
             num[0] = {"minimum": num[0]}
             num[1] = {"average": num[1]}
-            data.get("default").get("python").update(
+            data.get("clear").get("python").update(
                 {"Totals": num[-2:]}
             )
 
@@ -728,8 +756,9 @@ def clr_from_python(lines):
 def clr_from_golang(lines):
     """clearlinux unit tests analysis"""
 
-    for i in lines[lines.index("[golang] [INFO] Test clear docker image:\n"):
-    lines.index("Clr-Golang-Server\n")]:
+    for i in lines[
+             lines.index("[golang] [INFO] Test clear docker image:\n"):
+             lines.index("Clr-Golang-Server\n")]:
 
         if i.startswith("BenchmarkBuild"):
             num = re.findall("\d+\.?\d* ns/op", i)
@@ -760,8 +789,8 @@ def clr_from_nodejs(lines):
     """clearlinux unit tests analysis"""
 
     for i in lines[
-             lines.index("[node] [INFO] Test clear docker image:\n"):lines.index(
-                 "[openjdk] == openjdk unit test ==\n")]:
+             lines.index("[node] [INFO] Test clear docker image:\n"):
+             lines.index("Clr-Node-Server\n")]:
 
         if i.startswith("Score"):
             num = re.findall("\d+\.?\d*", i)
@@ -771,10 +800,10 @@ def clr_from_nodejs(lines):
 
 
 def clr_form_openjdk(lines):
-    """"""
+    """clearlinux unit tests analysis"""
     for i in lines[
-             lines.index("openjdk/openjdk.sh\n"):
-             lines.index("Default-Openjdk-Server\n")]:
+             lines.index("[openjdk] [INFO] Test clear docker image first:\n"):
+             lines.index("Clr-Openjdk-Server\n")]:
 
         if i.startswith("o.s.MyBenchmark.testMethod"):
             num = re.findall("\d+\.?\d+", i)
@@ -792,8 +821,9 @@ def clr_form_openjdk(lines):
 def clr_from_ruby(lines):
     """ruby unit tests analysis"""
 
-    for i in lines[lines.index("[ruby] [INFO] Test clear docker image:\n"):
-    lines.index("Clr-Ruby-Server\n")]:
+    for i in lines[
+             lines.index("[ruby] [INFO] Test clear docker image:\n"):
+             lines.index("Clr-Ruby-Server\n")]:
         if i.endswith("s/i)\n"):
             if "app_answer" in i:
                 num = re.findall("\d+\.?\d*", i)
@@ -1625,57 +1655,57 @@ def StaClrRuby(lines):
 
 
 def main():
-    file_name = 'test_LOG.log'
+    # file_name = 'test_LOG.log'
     status_log = 'status_LOG.log'
-    test = read_logs(file_name)
+    # test = read_logs(file_name)
     status = read_status_logs(status_log)
-    default_from_httpd(test)
-    default_from_nginx(test)
-    default_from_memcached(test)
-    default_from_redis(test)
-    default_from_php(test)
-    default_from_python(test)
-    default_from_golang(test)
-    default_from_nodejs(test)
-    default_from_openjdk(test)
-    default_from_ruby(test)
+    # default_from_httpd(test)
+    # default_from_nginx(test)
+    # default_from_memcached(test)
+    # default_from_redis(test)
+    # default_from_php(test)
+    # default_from_python(test)
+    # default_from_golang(test)
+    # default_from_nodejs(test)
+    # default_from_openjdk(test)
+    # default_from_ruby(test)
 
-    clr_from_httpd(test)
-    clr_from_nginx(test)
-    clr_from_memcached(test)
-    clr_from_redis(test)
-    clr_from_php(test)
-    clr_from_golang(test)
-    clr_from_python(test)
-    clr_from_nodejs(test)
-    clr_form_openjdk(test)
-    clr_from_ruby(test)
+    # clr_from_httpd(test)
+    # clr_from_nginx(test)
+    # clr_from_memcached(test)
+    # clr_from_redis(test)
+    # clr_from_php(test)
+    # clr_from_python(test)
+    # clr_from_golang(test)
+    # clr_from_nodejs(test)
+    # clr_form_openjdk(test)
+    # clr_from_ruby(test)
 
 
-    StaDefHttpd(status)
-    StaDefNginx(status)
-    StaDefMemcached(status)
-    StaDefRedis(status)
-    StaDefPhp(status)
-    StaDefPython(status)
-    StaDefGolang(status)
-    StaDefNode(status)
-    StaDefOpenjdk(status)
-    StaDefRuby(status)
+    # StaDefHttpd(status)
+    # StaDefNginx(status)
+    # StaDefMemcached(status)
+    # StaDefRedis(status)
+    # StaDefPhp(status)
+    # StaDefPython(status)
+    # StaDefGolang(status)
+    # StaDefNode(status)
+    # StaDefOpenjdk(status)
+    # StaDefRuby(status)
+    #
+    # StaClrHttpd(status)
+    # StaClrNginx(status)
+    # StaClrMemcached(status)
+    # StaClrRedis(status)
+    # StaClrPhp(status)
+    # StaClrPython(status)
+    # StaClrGolang(status)
+    # StaClrNode(status)
+    # StaClrOpenjdk(status)
+    # StaClrRuby(status)
 
-    StaClrHttpd(status)
-    StaClrNginx(status)
-    StaClrMemcached(status)
-    StaClrRedis(status)
-    StaClrPhp(status)
-    StaClrPython(status)
-    StaClrGolang(status)
-    StaClrNode(status)
-    StaClrOpenjdk(status)
-    StaClrRuby(status)
-
-    with open('data_NEW.json', 'w') as f:
-        json.dump(data, f)
+    # with open('data_NEW.json', 'w') as f:
+    #     json.dump(data, f)
 
 
 if __name__ == '__main__':

@@ -1,9 +1,8 @@
-import time
-from core.abstract import Global
-from pprint import pprint
 import re
 import json
+from core.abstract import Global
 from conf import ConfManagement
+
 
 class StatusDefLog(Global):
 
@@ -11,13 +10,14 @@ class StatusDefLog(Global):
         super(StatusDefLog, self).__init__()
         status_logpath = ConfManagement().get_ini("STATUS_LOG_PATH")
         self.status_log = self.read_logs(status_logpath)
+
         with open('data.json', 'r') as f:
             self.data = json.load(f)
 
     def serialization(self):
         pass
 
-   
+
 class StaDefHttpd(StatusDefLog):
     """default test_status_httpd long analysis"""
 
@@ -152,7 +152,7 @@ class StaDefNginx(StatusDefLog):
                 data.get("status_def").get("nginx").update(
                     {"MicroService_layer": num[0]}
                 )
-        
+
         with open("data.json", 'w') as f:
             json.dump(data, f)
 
@@ -199,7 +199,7 @@ class StaDefMemcached(StatusDefLog):
                 data.get("status_def").get("memcached").update(
                     {"MicroService_layer": num[0]}
                 )
-        
+
         with open("data.json", 'w') as f:
             json.dump(data, f)
 
@@ -248,8 +248,8 @@ class StaDefRedis(StatusDefLog):
 
         with open("data.json", 'w') as f:
             json.dump(data, f)
-      
-        
+
+
 class StaDefPhp(StatusDefLog):
     """default test_status_php long analysis"""
 
@@ -341,7 +341,7 @@ class StaDefPython(StatusDefLog):
         with open("data.json", 'w') as f:
             json.dump(data, f)
 
-        
+
 class StaDefNode(StatusDefLog):
     """default test_status_node long analysis"""
 
@@ -383,7 +383,7 @@ class StaDefNode(StatusDefLog):
                 data.get("status_def").get("node").update(
                     {"MicroService_layer": num[0]}
                 )
-        
+
         with open("data.json", 'w') as f:
             json.dump(data, f)
 
@@ -429,7 +429,7 @@ class StaDefOpenjdk(StatusDefLog):
                 data.get("status_def").get("openjdk").update(
                     {"MicroService_layer": num[0]}
                 )
-        
+
         with open("data.json", 'w') as f:
             json.dump(data, f)
 
@@ -475,6 +475,6 @@ class StaDefRuby(StatusDefLog):
                 data.get("status_def").get("ruby").update(
                     {"MicroService_layer": num[0]}
                 )
-        
+
         with open("data.json", 'w') as f:
             json.dump(data, f)

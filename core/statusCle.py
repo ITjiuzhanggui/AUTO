@@ -1,17 +1,16 @@
-import json
-import time
-from core.abstract import Global
-from pprint import pprint
 import re
-
+import json
+from core.abstract import Global
 from conf import ConfManagement
 
-class StatusLog(Global):
+
+class StatusClrLog(Global):
 
     def __init__(self):
-        super(StatusLog, self).__init__()
+        super(StatusClrLog, self).__init__()
         test_logpath = ConfManagement().get_ini("STATUS_LOG_PATH")
         self.status_log = self.read_logs(test_logpath)
+
         with open('data.json', 'r') as f:
             self.data = json.load(f)
         self.status_version()
@@ -39,7 +38,7 @@ class StatusLog(Global):
                 )
 
 
-class StaClrHttpd(StatusLog):
+class StaClrHttpd(StatusClrLog):
     """default test_status_httpd long analysis"""
 
     def serialization(self):
@@ -85,7 +84,7 @@ class StaClrHttpd(StatusLog):
             json.dump(data, f)
 
 
-class StaClrGolang(StatusLog):
+class StaClrGolang(StatusClrLog):
     """default test_status_golang long analysis"""
 
     def serialization(self):
@@ -131,7 +130,7 @@ class StaClrGolang(StatusLog):
             json.dump(data, f)
 
 
-class StaClrNginx(StatusLog):
+class StaClrNginx(StatusClrLog):
     """default test_status_nginx long analysis"""
 
     def serialization(self):
@@ -176,7 +175,7 @@ class StaClrNginx(StatusLog):
             json.dump(data, f)
 
 
-class StaClrMemcached(StatusLog):
+class StaClrMemcached(StatusClrLog):
     """default test_status_memcached long analysis"""
 
     def serialization(self):
@@ -222,7 +221,7 @@ class StaClrMemcached(StatusLog):
             json.dump(data, f)
 
 
-class StaClrRedis(StatusLog):
+class StaClrRedis(StatusClrLog):
     """default test_status_redis long analysis"""
 
     def serialization(self):
@@ -268,7 +267,7 @@ class StaClrRedis(StatusLog):
             json.dump(data, f)
 
 
-class StaClrPhp(StatusLog):
+class StaClrPhp(StatusClrLog):
     """default test_status_php long analysis"""
 
     def serialization(self):
@@ -314,7 +313,7 @@ class StaClrPhp(StatusLog):
             json.dump(data, f)
 
 
-class StaClrPython(StatusLog):
+class StaClrPython(StatusClrLog):
     """default test_status_python long analysis"""
 
     def serialization(self):
@@ -360,7 +359,7 @@ class StaClrPython(StatusLog):
             json.dump(data, f)
 
 
-class StaClrNode(StatusLog):
+class StaClrNode(StatusClrLog):
     """default test_status_node long analysis"""
 
     def serialization(self):
@@ -406,7 +405,7 @@ class StaClrNode(StatusLog):
             json.dump(data, f)
 
 
-class StaClrOpenjdk(StatusLog):
+class StaClrOpenjdk(StatusClrLog):
     """default test_status_openjdk long analysis"""
 
     def serialization(self):
@@ -452,7 +451,7 @@ class StaClrOpenjdk(StatusLog):
             json.dump(data, f)
 
 
-class StaClrRuby(StatusLog):
+class StaClrRuby(StatusClrLog):
     """default test_status_openjdk long analysis"""
 
     def serialization(self):
@@ -496,4 +495,3 @@ class StaClrRuby(StatusLog):
 
         with open("data.json", 'w') as f:
             json.dump(data, f)
-

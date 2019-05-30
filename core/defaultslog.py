@@ -1,9 +1,8 @@
 import json
-
-from core.abstract import Global
 import re
-
+from core.abstract import Global
 from conf import ConfManagement
+
 
 class DefTestLog(Global):
 
@@ -11,6 +10,7 @@ class DefTestLog(Global):
         super(DefTestLog, self).__init__()
         test_logpath = ConfManagement().get_ini("TEST_LOG_PATH")
         self.test_log = self.read_logs(test_logpath)
+
         with open('data.json', 'r') as f:
             self.data = json.load(f)
 
@@ -143,13 +143,6 @@ class DefMemcached(DefTestLog):
                 num[-1] += " KB/sec"
                 data.get("default").get("memcached").update(
                     {"Gets": num[-2:]})
-
-            # if i.startswith("Waits"):
-            #     num = re.findall("---|\d+\.?\d*", i)
-            #     self.exception_to_response(num, "default_memcacher:Waits")
-            #     num[-1] += " KB/sec"
-            #     data.get("default_").get("memcached").update(
-            #         {"Waits": num[-2:]})
 
             if i.startswith("Totals"):
                 num = re.findall("---|\d+\.?\d*", i)
@@ -486,6 +479,148 @@ class DefNode(DefTestLog):
                     {"benchmark-node-octane": num[-1]}
                 )
 
+        with open("data.json", 'w') as f:
+            json.dump(data, f)
+
+
+class DefOpenjdk(DefTestLog):
+    """default test_case openjdk analysis"""
+
+    def serialization(self):
+        lines = self.test_log
+        data = self.data
+
+        for i in lines[
+                 lines.index("openjdk/openjdk.sh\n"):
+                 lines.index("Default-Openjdk-Server\n")]:
+
+            if i.startswith("o.s.MyBenchmark.testMethod"):
+                num = re.findall("\d+\.?\d+", i)
+                self.exception_to_response(num, "default_openjdk:MyBenchmark.testMethod:Score")
+                data.get("default").get("openjdk").update(
+                    {"MyBenchmark.testMethod:Score": num[1]}
+                )
+
+            if i.startswith("o.s.MyBenchmark.testMethod"):
+                num = re.findall("\d+\.?\d+", i)
+                self.exception_to_response(num, "default_openjdk:o.s.MyBenchmark.testMethod:Error")
+                data.get("default").get("openjdk").update(
+                    {"o.s.MyBenchmark.testMethod:Error": num[-1]}
+                )
+
+        with open("data.json")as f:
+            json.dump(data, f)
+
+
+class DefRuby(DefTestLog):
+    """default test_case ruby analysis"""
+
+    def serialization(self):
+        lines = self.test_log
+        data = self.data
+
+        for i in lines[
+                 lines.index("ruby/ruby.sh\n"):
+                 lines.index("Default-Ruby-Server\n")]:
+
+            if i.endswith("s/i)\n"):
+                if "app_answer" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_answer")
+                    data.get("default").get("ruby").update(
+                        {"app_answer": num[-2]}
+                    )
+            if i.endswith("s/i)\n"):
+                if "app_aobench" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_aobench")
+                    data.get("default").get("ruby").update(
+                        {"app_aobench": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_erb" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_erb")
+                    data.get("default").get("ruby").update(
+                        {"app_erb": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_factorial" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_factorial")
+                    data.get("default").get("ruby").update(
+                        {"app_factorial": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_fib" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_fib")
+                    data.get("default").get("ruby").update(
+                        {"app_fib": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_lc_fizzbuzz" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_lc_fizzbuzz")
+                    data.get("default").get("ruby").update(
+                        {"app_lc_fizzbuzz": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_mandelbrot" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_mandelbrot")
+                    data.get("default").get("ruby").update(
+                        {"app_mandelbrot": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_pentomino" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_pentomino")
+                    data.get("default").get("ruby").update(
+                        {"app_pentomino": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_raise" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_raise")
+                    data.get("default").get("ruby").update(
+                        {"app_raise": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_strconcat" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_strconcat")
+                    data.get("default").get("ruby").update(
+                        {"app_strconcat": num[-2]}
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_tak" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_tak")
+                    data.get("default").get("ruby").update(
+                        {"app_tak": num[-2]}
+
+                    )
+
+            if i.endswith("s/i)\n"):
+                if "app_tarai" in i:
+                    num = re.findall("\d+\.?\d*", i)
+                    self.exception_to_response(num, "default_ruby:app_tarai")
+                    data.get("default").get("ruby").update(
+                        {"app_tarai": num[-2]}
+                    )
 
         with open("data.json", 'w') as f:
             json.dump(data, f)
+
+
+
