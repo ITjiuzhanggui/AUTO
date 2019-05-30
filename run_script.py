@@ -30,8 +30,7 @@ path = os.path.join(CURPATH, "update")
 os.makedirs(path, exist_ok=True)
 make_path = auto_path + "/1.sh"
 make_path += " make update"
-# print(make_path)
-#get_log_update(make_path, path)
+get_log_update(make_path, path)
 
 
 def get_log_status(cmd, logs_patg):
@@ -49,8 +48,7 @@ os.makedirs(path, exist_ok=True)
 make_path = auto_path + '/1.sh'
 make_path += " make status"
 get_log_status(make_path, path)
-
-test_cmd = ["make httpd","make nginx"]
+test_cmd = ["make httpd", "make nginx", ""]
 
 
 def get_log_test(cmd, logs_patg):
@@ -68,24 +66,24 @@ def anlies():
     if "status_log" in list:
         logs = os.path.join(CURPATH, "status_log")
         for i in os.listdir(logs):
-            curl_path = os.path.join(logs,i)
+            curl_path = os.path.join(logs, i)
             ConfManagement().set_ini(session="STATUS_LOG_PATH", value=curl_path)
             StaDefHttpd().serialization()
             StaClrHttpd().serialization()
             StaDefNginx().serialization()
             StaClrNginx().serialization()
-                #StaDefMemcached().serialization()
-                #StaClrMemcached().serialization()
-                #StaDefRedis().serialization()
-                #StaClrRedis().serialization()
-                #StaDefPhp().serialization()
-                #StaClrPhp().serialization()
-                #StaDefPython().serialization()
-                #StaClrPython().serialization()
-                #StaDefGolang().serialization()
-                #StaClrGolang().serialization()
-                #StaDefNode().serialization()
-                #StaClrNode().serialization()
+            # StaDefMemcached().serialization()
+            # StaClrMemcached().serialization()
+            # StaDefRedis().serialization()
+            # StaClrRedis().serialization()
+            # StaDefPhp().serialization()
+            # StaClrPhp().serialization()
+            # StaDefPython().serialization()
+            # StaClrPython().serialization()
+            # StaDefGolang().serialization()
+            # StaClrGolang().serialization()
+            # StaDefNode().serialization()
+            # StaClrNode().serialization()
 
     # if "update_log" in list:
     #     for i in os.path.join(CURPATH, "update_log"):
@@ -96,7 +94,7 @@ def anlies():
         for i in os.listdir(logs):
             log = os.path.join(logs, i)
             print(log)
-            for curl_path  in os.listdir(log):
+            for curl_path in os.listdir(log):
                 p = os.path.join(log, curl_path)
                 ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
                 DefHttpd().serialization()
@@ -115,6 +113,7 @@ def anlies():
                 # ClrGoalng().serialization()
                 # DefNode().serialization()
                 # ClrNode().serialization()
+
 
 for i in test_cmd:
     path = os.path.join(CURPATH, "test_log")
