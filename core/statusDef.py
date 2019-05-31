@@ -31,7 +31,7 @@ class StaDefHttpd(StaDefLog):
                     start = lines.index(i)
 
         while if_n:
-            for i in lines[start:]:
+            for i in lines[start]:
                 if i == '\n':
                     if_n = False
                     end = lines[start:].index(i)

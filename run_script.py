@@ -48,8 +48,8 @@ os.makedirs(path, exist_ok=True)
 make_path = auto_path + '/1.sh'
 make_path += " make status"
 get_log_status(make_path, path)
-test_cmd = ["make httpd", "make nginx", "make memcached", "make redis", "make php", "make python", "make golang",
-            "make node", "make openjdk", "make ruby", "make tensorflow"]
+test_cmd = [" make httpd", " make nginx", " make memcached", " make redis", " make php", " make python", " make golang",
+            " make node", " make openjdk", " make ruby", " make tensorflow"]
 
 
 def get_log_test(cmd, logs_patg):
@@ -89,7 +89,6 @@ def anlies():
             StaClrOpenjdk().serialization()
             StaDefRuby().serialization()
             StaClrRuby().serialization()
-
 
     # if "update_log" in list:
     #     for i in os.path.join(CURPATH, "update_log"):
