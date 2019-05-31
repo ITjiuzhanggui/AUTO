@@ -13,6 +13,13 @@ date = time.strftime("%Y-%m-%d", time.localtime()).replace(' ', ':').replace(':'
 
 CURPATH = os.path.dirname(os.path.realpath(__file__)) + "/%s" % date
 os.makedirs(CURPATH, exist_ok=True)
+
+JSON_PATH = os.path.join(CURPATH, "json")
+os.makedirs(JSON_PATH, exist_ok=True)
+JSON_STATUS_PATH = os.path.join(JSON_PATH, "status")
+JSON_TEST_PATH = os.path.join(JSON_PATH, "test")
+os.makedirs(JSON_TEST_PATH,exist_ok=True)
+os.makedirs(JSON_STATUS_PATH,exist_ok=True)
 os.system("cp 1.sh %s/" % auto_path)
 
 
@@ -43,13 +50,17 @@ def get_log_status(cmd, logs_patg):
                 replace(':', ':'))
         )
 
-
+        
 path = os.path.join(CURPATH, "status_log")
 os.makedirs(path, exist_ok=True)
 make_path = auto_path + '/1.sh'
 make_path += " %s make status"%auto_path
-get_log_status(make_path, path)
-test_cmd = ["make httpd", "make nginx", "make memcached", "make redis", "make php", "make python",  "make tensorflow"]
+
+#get_log_status(make_path, path)
+
+
+
+test_cmd = ["make httpd", "make nginx"]
 
 
 def get_log_test(cmd, logs_patg):
@@ -91,6 +102,8 @@ def anlies():
             StaDefRuby().serialization()
             StaClrRuby().serialization()
 
+
+
     # if "update_log" in list:
     #     for i in os.path.join(CURPATH, "update_log"):
     #         pass
@@ -99,31 +112,50 @@ def anlies():
         logs = os.path.join(CURPATH, "test_log")
         for i in os.listdir(logs):
             log = os.path.join(logs, i)
-            print(log)
-            for curl_path in os.listdir(log):
-                p = os.path.join(log, curl_path)
-                ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                DefHttpd().serialization()
-                ClrHttpd().serialization()
-                DefNginx().serialization()
-                ClrNginx().serialization()
-                DefMemcached.serialization()
-                ClrMemcached().serialization()
-                DefRedis().serialization()
-                ClrRedis().serialization()
-                DefPhp().serialization()
-                ClrPhp().serialization()
-                DefPython().serialization()
-                ClrPython().serialization()
-                DefGoalng().serialization()
-                ClrGoalng().serialization()
-                DefNode().serialization()
-                ClrNode().serialization()
-                DefOpenjdk().serialization()
-                ClrOpenjdk().serialization()
-                DefRuby().serialization()
-                ClrRuby().serialization()
+            #if "redis" in log:
+            #    for files in os.listdir(log):
+            #        p = os.path.join(log, files)
+            #        ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+            #        DefRedis().serialization()
+            #        ClrRedis().serialization()
+            if "httpd" in log:
+                for files in os.listdir(log):
+                    p = os.path.join(log, files)
+                    ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+                    DefHttpd().serialization()
+                    ClrHttpd().serialization()
+            if "nginx" in log:
+                for files in os.listdir(log):
+                    p = os.path.join(log, files)
+                    ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+                    DefNginx().serialization()
+                    ClrNginx().serialization()
+        os.system("cp data.json %s"%(JSON_TEST_PATH+"/%d.json"%int(time.time())))
+        os.system("cp ini_data.json data.json")
 
+            #for curl_path in os.listdir(log):
+            #    p = os.path.join(log, curl_path)
+            #    ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+            #    DefHttpd().serialization()
+            #    ClrHttpd().serialization()
+            #    DefNginx().serialization()
+            #    ClrNginx().serialization()
+            #    DefMemcached.serialization()
+            #    ClrMemcached().serialization()
+            #    DefRedis().serialization()
+            #    ClrRedis().serialization()
+            #    DefPhp().serialization()
+            #    ClrPhp().serialization()
+            #    DefPython().serialization()
+            #    ClrPython().serialization()
+            #    DefGoalng().serialization()
+            #    ClrGoalng().serialization()
+            #    DefNode().serialization()
+            #    ClrNode().serialization()
+            #    DefOpenjdk().serialization()
+            #    ClrOpenjdk().serialization()
+            #    DefRuby().serialization()
+            #    ClrRuby().serialization()
 
 for i in test_cmd:
     path = os.path.join(CURPATH, "test_log")
@@ -132,7 +164,10 @@ for i in test_cmd:
     make_path = auto_path + '/1.sh'
     make_path += " {} {} ".format(auto_path,i)
     get_log_test(make_path, path)
+
+
 anlies()
+
 
 sh = auto_path + '/1.sh'
 os.system("rm %s" % sh)

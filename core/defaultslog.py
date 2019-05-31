@@ -24,7 +24,6 @@ class DefHttpd(DefTestLog):
     def serialization(self):
         lines = self.test_log
         data = self.data
-
         for i in lines[
                  lines.index("httpd/httpd.sh\n"):
                  lines.index("Default-Httpd-Server\n")]:
