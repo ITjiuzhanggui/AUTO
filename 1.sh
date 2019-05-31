@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /home/cle-test/microservices-unit-tests/
+cd /home/zds/microservices-unit-tests/
 $1 $2
 
