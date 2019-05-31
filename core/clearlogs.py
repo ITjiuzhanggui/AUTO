@@ -492,8 +492,8 @@ class ClrOpenjdk(ClrTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("[openjdk] [INFO] Test clear docker image first:\n"):
-                 lines.index("Clr-Openjdk-Server\n")]:
+                 lines.index("[openjdk] [INFO] Test clear docker image:\n"):
+                 lines.index("clr-openjdk\n")]:
 
             if i.startswith("o.s.MyBenchmark.testMethod"):
                 num = re.findall("\d+\.?\d+", i)

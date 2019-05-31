@@ -491,8 +491,8 @@ class DefOpenjdk(DefTestLog):
         data = self.data
 
         for i in lines[
-                 lines.index("openjdk/openjdk.sh\n"):
-                 lines.index("Default-Openjdk-Server\n")]:
+                 lines.index("[openjdk] [INFO] Test docker hub official image:\n"):
+                 lines.index("offi-openjdk\n")]:
 
             if i.startswith("o.s.MyBenchmark.testMethod"):
                 num = re.findall("\d+\.?\d+", i)
