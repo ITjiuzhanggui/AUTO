@@ -1,4 +1,4 @@
 #!/bin/bash
-cd /home/zds/microservices-unit-tests/
-$1 $2
+cd $1
+$2 $3
 

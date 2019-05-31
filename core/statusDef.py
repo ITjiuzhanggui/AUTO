@@ -25,13 +25,14 @@ class StaDefHttpd(StaDefLog):
         lines = self.status_log
         data = self.data
         if_n = True
+        start = 0
         for i in lines:
             if i.startswith("httpd"):
                 if "latest" in i:
-                    start = lines.index(i)
+                    self.start = lines.index(i)
 
         while if_n:
-            for i in lines[start]:
+            for i in lines[self.start:]:
                 if i == '\n':
                     if_n = False
                     end = lines[start:].index(i)
