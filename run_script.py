@@ -48,7 +48,8 @@ os.makedirs(path, exist_ok=True)
 make_path = auto_path + '/1.sh'
 make_path += " make status"
 get_log_status(make_path, path)
-test_cmd = ["make httpd", "make nginx", ""]
+test_cmd = ["make httpd", "make nginx", "make memcached", "make redis", "make php", "make python", "make golang",
+            "make node", "make openjdk", "make ruby", "make tensorflow"]
 
 
 def get_log_test(cmd, logs_patg):
@@ -72,18 +73,23 @@ def anlies():
             StaClrHttpd().serialization()
             StaDefNginx().serialization()
             StaClrNginx().serialization()
-            # StaDefMemcached().serialization()
-            # StaClrMemcached().serialization()
-            # StaDefRedis().serialization()
-            # StaClrRedis().serialization()
-            # StaDefPhp().serialization()
-            # StaClrPhp().serialization()
-            # StaDefPython().serialization()
-            # StaClrPython().serialization()
-            # StaDefGolang().serialization()
-            # StaClrGolang().serialization()
-            # StaDefNode().serialization()
-            # StaClrNode().serialization()
+            StaDefMemcached().serialization()
+            StaClrMemcached().serialization()
+            StaDefRedis().serialization()
+            StaClrRedis().serialization()
+            StaDefPhp().serialization()
+            StaClrPhp().serialization()
+            StaDefPython().serialization()
+            StaClrPython().serialization()
+            StaDefGolang().serialization()
+            StaClrGolang().serialization()
+            StaDefNode().serialization()
+            StaClrNode().serialization()
+            StaDefOpenjdk().serialization()
+            StaClrOpenjdk().serialization()
+            StaDefRuby().serialization()
+            StaClrRuby().serialization()
+
 
     # if "update_log" in list:
     #     for i in os.path.join(CURPATH, "update_log"):
@@ -101,18 +107,22 @@ def anlies():
                 ClrHttpd().serialization()
                 DefNginx().serialization()
                 ClrNginx().serialization()
-                # DefMemcached.serialization()
-                # ClrMemcached().serialization()
-                # DefRedis().serialization()
-                # ClrRedis().serialization()
-                # DefPhp().serialization()
-                # ClrPhp().serialization()
-                # DefPython.serialization()
-                # ClrPython().serialization()
-                # DefGoalng().serialization()
-                # ClrGoalng().serialization()
-                # DefNode().serialization()
-                # ClrNode().serialization()
+                DefMemcached.serialization()
+                ClrMemcached().serialization()
+                DefRedis().serialization()
+                ClrRedis().serialization()
+                DefPhp().serialization()
+                ClrPhp().serialization()
+                DefPython().serialization()
+                ClrPython().serialization()
+                DefGoalng().serialization()
+                ClrGoalng().serialization()
+                DefNode().serialization()
+                ClrNode().serialization()
+                DefOpenjdk().serialization()
+                ClrOpenjdk().serialization()
+                DefRuby().serialization()
+                ClrRuby().serialization()
 
 
 for i in test_cmd:

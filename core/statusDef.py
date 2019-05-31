@@ -4,10 +4,10 @@ from core.abstract import Global
 from conf import ConfManagement
 
 
-class StatusDefLog(Global):
+class StaDefLog(Global):
 
     def __init__(self):
-        super(StatusDefLog, self).__init__()
+        super(StaDefLog, self).__init__()
         status_logpath = ConfManagement().get_ini("STATUS_LOG_PATH")
         self.status_log = self.read_logs(status_logpath)
 
@@ -18,7 +18,7 @@ class StatusDefLog(Global):
         pass
 
 
-class StaDefHttpd(StatusDefLog):
+class StaDefHttpd(StaDefLog):
     """default test_status_httpd long analysis"""
 
     def serialization(self):
@@ -65,7 +65,7 @@ class StaDefHttpd(StatusDefLog):
             json.dump(data, f)
 
 
-class StaDefGolang(StatusDefLog):
+class StaDefGolang(StaDefLog):
     """default test_status_golang long analysis"""
 
     def serialization(self):
@@ -111,7 +111,7 @@ class StaDefGolang(StatusDefLog):
             json.dump(data, f)
 
 
-class StaDefNginx(StatusDefLog):
+class StaDefNginx(StaDefLog):
     """default test_status_nginx long analysis"""
 
     def serialization(self):
@@ -157,7 +157,7 @@ class StaDefNginx(StatusDefLog):
             json.dump(data, f)
 
 
-class StaDefMemcached(StatusDefLog):
+class StaDefMemcached(StaDefLog):
     """default test_status_memcached long analysis"""
 
     def serialization(self):
@@ -204,7 +204,7 @@ class StaDefMemcached(StatusDefLog):
             json.dump(data, f)
 
 
-class StaDefRedis(StatusDefLog):
+class StaDefRedis(StaDefLog):
     """default test_status_redis long analysis"""
 
     def serialization(self):
@@ -250,7 +250,7 @@ class StaDefRedis(StatusDefLog):
             json.dump(data, f)
 
 
-class StaDefPhp(StatusDefLog):
+class StaDefPhp(StaDefLog):
     """default test_status_php long analysis"""
 
     def serialization(self):
@@ -296,7 +296,7 @@ class StaDefPhp(StatusDefLog):
             json.dump(data, f)
 
 
-class StaDefPython(StatusDefLog):
+class StaDefPython(StaDefLog):
     """default test_status_php long analysis"""
 
     def serialization(self):
@@ -342,7 +342,7 @@ class StaDefPython(StatusDefLog):
             json.dump(data, f)
 
 
-class StaDefNode(StatusDefLog):
+class StaDefNode(StaDefLog):
     """default test_status_node long analysis"""
 
     def serialization(self):
@@ -388,7 +388,7 @@ class StaDefNode(StatusDefLog):
             json.dump(data, f)
 
 
-class StaDefOpenjdk(StatusDefLog):
+class StaDefOpenjdk(StaDefLog):
     """default test_status_openjdk long analysis"""
 
     def serialization(self):
@@ -434,7 +434,7 @@ class StaDefOpenjdk(StatusDefLog):
             json.dump(data, f)
 
 
-class StaDefRuby(StatusDefLog):
+class StaDefRuby(StaDefLog):
     """default test_status_ruly long analysis"""
 
     def serialization(self):

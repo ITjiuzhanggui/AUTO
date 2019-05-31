@@ -4,10 +4,10 @@ from core.abstract import Global
 from conf import ConfManagement
 
 
-class StatusClrLog(Global):
+class StaClrLog(Global):
 
     def __init__(self):
-        super(StatusClrLog, self).__init__()
+        super(StaClrLog, self).__init__()
         test_logpath = ConfManagement().get_ini("STATUS_LOG_PATH")
         self.status_log = self.read_logs(test_logpath)
 
@@ -38,7 +38,7 @@ class StatusClrLog(Global):
                 )
 
 
-class StaClrHttpd(StatusClrLog):
+class StaClrHttpd(StaClrLog):
     """default test_status_httpd long analysis"""
 
     def serialization(self):
@@ -84,7 +84,7 @@ class StaClrHttpd(StatusClrLog):
             json.dump(data, f)
 
 
-class StaClrGolang(StatusClrLog):
+class StaClrGolang(StaClrLog):
     """default test_status_golang long analysis"""
 
     def serialization(self):
@@ -130,7 +130,7 @@ class StaClrGolang(StatusClrLog):
             json.dump(data, f)
 
 
-class StaClrNginx(StatusClrLog):
+class StaClrNginx(StaClrLog):
     """default test_status_nginx long analysis"""
 
     def serialization(self):
@@ -175,7 +175,7 @@ class StaClrNginx(StatusClrLog):
             json.dump(data, f)
 
 
-class StaClrMemcached(StatusClrLog):
+class StaClrMemcached(StaClrLog):
     """default test_status_memcached long analysis"""
 
     def serialization(self):
@@ -221,7 +221,7 @@ class StaClrMemcached(StatusClrLog):
             json.dump(data, f)
 
 
-class StaClrRedis(StatusClrLog):
+class StaClrRedis(StaClrLog):
     """default test_status_redis long analysis"""
 
     def serialization(self):
@@ -267,7 +267,7 @@ class StaClrRedis(StatusClrLog):
             json.dump(data, f)
 
 
-class StaClrPhp(StatusClrLog):
+class StaClrPhp(StaClrLog):
     """default test_status_php long analysis"""
 
     def serialization(self):
@@ -313,7 +313,7 @@ class StaClrPhp(StatusClrLog):
             json.dump(data, f)
 
 
-class StaClrPython(StatusClrLog):
+class StaClrPython(StaClrLog):
     """default test_status_python long analysis"""
 
     def serialization(self):
@@ -359,7 +359,7 @@ class StaClrPython(StatusClrLog):
             json.dump(data, f)
 
 
-class StaClrNode(StatusClrLog):
+class StaClrNode(StaClrLog):
     """default test_status_node long analysis"""
 
     def serialization(self):
@@ -405,7 +405,7 @@ class StaClrNode(StatusClrLog):
             json.dump(data, f)
 
 
-class StaClrOpenjdk(StatusClrLog):
+class StaClrOpenjdk(StaClrLog):
     """default test_status_openjdk long analysis"""
 
     def serialization(self):
@@ -451,7 +451,7 @@ class StaClrOpenjdk(StatusClrLog):
             json.dump(data, f)
 
 
-class StaClrRuby(StatusClrLog):
+class StaClrRuby(StaClrLog):
     """default test_status_openjdk long analysis"""
 
     def serialization(self):

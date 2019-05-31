@@ -1,1 +1,55 @@
-{"default": {"httpd": {"Time taken for tests": "1.188", "Requests per second": "84185.00", "Time per request": "0.594", "Time per request(all)": "0.012", "Transfer rate": "26669.04"}, "nginx": {}, "memcached": {}, "redis": {}, "php": {}, "python": {}, "golang": {}, "node": {}, "openjdk": {}, "ruby": {}, "tensorflow": {}}, "clear": {"httpd": {"Time taken for tests": "1.169", "Requests per second": "85568.16", "Time per request": "0.584", "Time per request(all)": "0.012", "Transfer rate": "27129.91"}, "nginx": {}, "memcached": {}, "redis": {}, "php": {}, "python": {}, "golang": {}, "node": {}, "openjdk": {}, "ruby": {}, "tensorflow": {}}, "status_def": {"httpd": {"Total": "132MB", "Base_Layer": "55.300000", "MicroService_layer": "76.400133"}, "golang": {}, "nginx": {"Total": "109MB", "Base_Layer": "55.300000", "MicroService_layer": "54.100022"}, "memcached": {}, "redis": {}, "php": {}, "python": {}, "node": {}, "openjdk": {}, "ruby": {}, "tensorflow": {}}, "status_Clr": {"clearlinux_version": "29280", "httpd": {"Total": "270MB", "Base_Layer": "150.000000", "MicroService_layer": "120.000129"}, "golang": {}, "nginx": {"Total": "226MB", "Base_Layer": "150.000000", "MicroService_layer": "76.260156"}, "memcached": {}, "redis": {}, "php": {}, "python": {}, "node": {}, "openjdk": {}, "ruby": {}, "tensorflow": {}}}
+{
+	"default": {
+		"httpd": {},
+		"nginx": {},
+		"memcached": {},
+		"redis": {},
+		"php": {},
+		"python": {},
+		"golang": {},
+		"node": {},
+		"openjdk": {},
+		"ruby": {},
+		"tensorflow": {}
+	},
+	"clear": {
+		"httpd": {},
+		"nginx": {},
+		"memcached": {},
+		"redis": {},
+		"php": {},
+		"python": {},
+		"golang": {},
+		"node": {},
+		"openjdk": {},
+		"ruby": {},
+		"tensorflow": {}
+	},
+	"status_def": {
+		"httpd": {},
+		"golang": {},
+		"nginx": {},
+		"memcached": {},
+		"redis": {},
+		"php": {},
+		"python": {},
+		"node": {},
+		"openjdk": {},
+		"ruby": {},
+		"tensorflow": {}
+	},
+	"status_Clr": {
+		"clearlinux_version": {},
+		"httpd": {},
+		"golang": {},
+		"nginx": {},
+		"memcached": {},
+		"redis": {},
+		"php": {},
+		"python": {},
+		"node": {},
+		"openjdk": {},
+		"ruby": {},
+		"tensorflow": {}
+	}
+}
