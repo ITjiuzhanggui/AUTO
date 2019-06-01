@@ -18,8 +18,8 @@ JSON_PATH = os.path.join(CURPATH, "json")
 os.makedirs(JSON_PATH, exist_ok=True)
 JSON_STATUS_PATH = os.path.join(JSON_PATH, "status")
 JSON_TEST_PATH = os.path.join(JSON_PATH, "test")
-os.makedirs(JSON_TEST_PATH,exist_ok=True)
-os.makedirs(JSON_STATUS_PATH,exist_ok=True)
+os.makedirs(JSON_TEST_PATH, exist_ok=True)
+os.makedirs(JSON_STATUS_PATH, exist_ok=True)
 os.system("cp 1.sh %s/" % auto_path)
 
 
@@ -36,8 +36,10 @@ def get_log_update(cmd, logs_patg):
 path = os.path.join(CURPATH, "update")
 os.makedirs(path, exist_ok=True)
 make_path = auto_path + "/1.sh"
-make_path += "%s make update"%auto_path
-#get_log_update(make_path, path)
+make_path += "%s make update" % auto_path
+
+
+# get_log_update(make_path, path)
 
 
 def get_log_status(cmd, logs_patg):
@@ -50,14 +52,13 @@ def get_log_status(cmd, logs_patg):
                 replace(':', ':'))
         )
 
-        
+
 path = os.path.join(CURPATH, "status_log")
 os.makedirs(path, exist_ok=True)
 make_path = auto_path + '/1.sh'
-make_path += " %s make status"%auto_path
+make_path += " %s make status" % auto_path
 
-#get_log_status(make_path, path)
-
+# get_log_status(make_path, path)
 
 
 test_cmd = ["make httpd", "make nginx"]
@@ -102,8 +103,6 @@ def anlies():
             StaDefRuby().serialization()
             StaClrRuby().serialization()
 
-
-
     # if "update_log" in list:
     #     for i in os.path.join(CURPATH, "update_log"):
     #         pass
@@ -112,62 +111,96 @@ def anlies():
         logs = os.path.join(CURPATH, "test_log")
         for i in os.listdir(logs):
             log = os.path.join(logs, i)
-            #if "redis" in log:
-            #    for files in os.listdir(log):
-            #        p = os.path.join(log, files)
-            #        ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-            #        DefRedis().serialization()
-            #        ClrRedis().serialization()
+
             if "httpd" in log:
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
                     DefHttpd().serialization()
                     ClrHttpd().serialization()
+
             if "nginx" in log:
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
                     DefNginx().serialization()
                     ClrNginx().serialization()
-        os.system("cp data.json %s"%(JSON_TEST_PATH+"/%d.json"%int(time.time())))
+
+            if "memcached" in log:
+                for files in os.listdir(log):
+                    p = os.path.join(log, files)
+                    ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+                    DefMemcached.serialization()
+                    ClrMemcached().serialization()
+
+            if "redis" in log:
+               for files in os.listdir(log):
+                   p = os.path.join(log, files)
+                   ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+                   DefRedis().serialization()
+                   ClrRedis().serialization()
+
+            if "php" in log:
+                for files in os.listdir(log):
+                    p = os.path.join(log, files)
+                    ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+                    DefPhp().serialization()
+                    ClrPhp().serialization()
+
+            if "python" in log:
+                for files in os.listdir(log):
+                    p = os.path.join(log, files)
+                    ConfManagement().set_ini(session="TEST_LOG_PATH",value=p)
+                    DefPython().serialization()
+                    ClrPython().serialization()
+
+
+            if "golang" in log:
+                for file in os.listdir(log):
+                    p = os.path.join(log, files)
+                    ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+                    DefGoalng().serialization()
+                    ClrGoalng().serialization()
+
+            if "node" in log:
+                for files in os.listdir(log):
+                    p = os.path.join(log, files)
+                    ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+                    DefNode().serialization()
+                    ClrNode().serialization()
+
+            if "openjdk" in log:
+                for files in os.listdir(log):
+                    p = os.path.join(log, files)
+                    ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+                    DefOpenjdk().serialization()
+                    ClrOpenjdk().serialization()
+
+
+            if "ruby" in log:
+                for files in os.listdir(log):
+                    p = os.path.join(log, files)
+                    ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+                    DefRuby().serialization()
+                    ClrRuby().serialization()
+
+        os.system("cp data.json %s" % (JSON_TEST_PATH + "/%d.json" % int(time.time())))
         os.system("cp ini_data.json data.json")
 
-            #for curl_path in os.listdir(log):
-            #    p = os.path.join(log, curl_path)
-            #    ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-            #    DefHttpd().serialization()
-            #    ClrHttpd().serialization()
-            #    DefNginx().serialization()
-            #    ClrNginx().serialization()
-            #    DefMemcached.serialization()
-            #    ClrMemcached().serialization()
-            #    DefRedis().serialization()
-            #    ClrRedis().serialization()
-            #    DefPhp().serialization()
-            #    ClrPhp().serialization()
-            #    DefPython().serialization()
-            #    ClrPython().serialization()
-            #    DefGoalng().serialization()
-            #    ClrGoalng().serialization()
-            #    DefNode().serialization()
-            #    ClrNode().serialization()
-            #    DefOpenjdk().serialization()
-            #    ClrOpenjdk().serialization()
-            #    DefRuby().serialization()
-            #    ClrRuby().serialization()
+        # for curl_path in os.listdir(log):
+        #    p = os.path.join(log, curl_path)
+        #    ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
+
 
 for i in test_cmd:
     path = os.path.join(CURPATH, "test_log")
     path = os.path.join(path, i.split(' ')[-1])
     os.makedirs(path, exist_ok=True)
     make_path = auto_path + '/1.sh'
-    make_path += " {} {} ".format(auto_path,i)
+    make_path += " {} {} ".format(auto_path, i)
     get_log_test(make_path, path)
 
-
 anlies()
-
 
 sh = auto_path + '/1.sh'
 os.system("rm %s" % sh)
