@@ -20,7 +20,6 @@ class SetLog(object):
         file_log_handler.setFormatter(formatter)
         logging.getLogger().addHandler(file_log_handler)
 
-
     def __getattr__(self, e):
         self.setup_log()
         log_match = {
