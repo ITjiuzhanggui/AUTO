@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import time
 import os
+from core.abstract import exect_contest
 from conf import ConfManagement
 from core.defaultslog import *
 from core.clearlogs import *
@@ -82,26 +83,26 @@ def anlies():
         for i in os.listdir(logs):
             curl_path = os.path.join(logs, i)
             ConfManagement().set_ini(session="STATUS_LOG_PATH", value=curl_path)
-            StaDefHttpd().serialization()
-            StaClrHttpd().serialization()
-            StaDefNginx().serialization()
-            StaClrNginx().serialization()
-            StaDefMemcached().serialization()
-            StaClrMemcached().serialization()
-            StaDefRedis().serialization()
-            StaClrRedis().serialization()
-            StaDefPhp().serialization()
-            StaClrPhp().serialization()
-            StaDefPython().serialization()
-            StaClrPython().serialization()
-            StaDefGolang().serialization()
-            StaClrGolang().serialization()
-            StaDefNode().serialization()
-            StaClrNode().serialization()
-            StaDefOpenjdk().serialization()
-            StaClrOpenjdk().serialization()
-            StaDefRuby().serialization()
-            StaClrRuby().serialization()
+            exect_contest(StaDefHttpd().serialization)
+            exect_contest(StaClrHttpd().serialization)
+            exect_contest(StaDefNginx().serialization)
+            exect_contest(StaClrNginx().serialization)
+            exect_contest(StaDefMemcached().serialization)
+            exect_contest(StaClrMemcached().serialization)
+            exect_contest(StaDefRedis().serialization)
+            exect_contest(StaClrRedis().serialization)
+            exect_contest(StaDefPhp().serialization)
+            exect_contest(StaClrPhp().serialization)
+            exect_contest(StaDefPython().serialization)
+            exect_contest(StaClrPython().serialization)
+            exect_contest(StaDefGolang().serialization)
+            exect_contest(StaClrGolang().serialization)
+            exect_contest(StaDefNode().serialization)
+            exect_contest(StaClrNode().serialization)
+            exect_contest(StaDefOpenjdk().serialization)
+            exect_contest(StaClrOpenjdk().serialization)
+            exect_contest(StaDefRuby().serialization)
+            exect_contest(StaClrRuby().serialization)
 
     if "test_log" in list:
         logs = os.path.join(CURPATH, "test_log")
@@ -112,71 +113,71 @@ def anlies():
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                    DefHttpd().serialization()
-                    ClrHttpd().serialization()
+                    exect_contest(DefHttpd().serialization)
+                    exect_contest(ClrHttpd().serialization)
 
             if "nginx" in log:
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                    DefNginx().serialization()
-                    ClrNginx().serialization()
+                    exect_contest(DefNginx().serialization)
+                    exect_contest(ClrNginx().serialization)
 
             if "memcached" in log:
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                    DefMemcached.serialization()
-                    ClrMemcached().serialization()
+                    exect_contest(DefMemcached.serialization)
+                    exect_contest(ClrMemcached().serialization)
 
             if "redis" in log:
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                    DefRedis().serialization()
-                    ClrRedis().serialization()
+                    exect_contest(DefRedis().serialization)
+                    exect_contest(ClrRedis().serialization)
 
             if "php" in log:
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                    DefPhp().serialization()
-                    ClrPhp().serialization()
+                    exect_contest(DefPhp().serialization)
+                    exect_contest(ClrPhp().serialization)
 
             if "python" in log:
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                    DefPython().serialization()
-                    ClrPython().serialization()
+                    exect_contest(DefPython().serialization)
+                    exect_contest(ClrPython().serialization)
 
             if "golang" in log:
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                    DefGoalng().serialization()
-                    ClrGoalng().serialization()
+                    exect_contest(DefGoalng().serialization)
+                    exect_contest(ClrGoalng().serialization)
 
             if "node" in log:
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                    DefNode().serialization()
-                    ClrNode().serialization()
+                    exect_contest(DefNode().serialization)
+                    exect_contest(ClrNode().serialization)
 
             if "openjdk" in log:
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                    DefOpenjdk().serialization()
-                    ClrOpenjdk().serialization()
+                    exect_contest(DefOpenjdk().serialization)
+                    exect_contest(ClrOpenjdk().serialization)
 
             if "ruby" in log:
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                    DefRuby().serialization()
-                    ClrRuby().serialization()
+                    exect_contest(DefRuby().serialization)
+                    exect_contest(ClrRuby().serialization)
 
         os.system("cp data.json %s" % (JSON_TEST_PATH + "/%d.json" % int(time.time())))
         os.system("cp ini_data.json data.json")

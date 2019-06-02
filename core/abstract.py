@@ -25,8 +25,8 @@ class Global(object):
         if match_result == []:
             SetLog().info(" %s Not getting" % message)
 
-# def exect_contest(fun):
-#     try:
-#         return fun()
-#     except Exception as e:
-#         pass
+def exect_contest(fun):
+    try:
+        return fun()
+    except Exception as e:
+        pass
