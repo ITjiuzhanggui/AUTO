@@ -25,6 +25,7 @@ os.system("cp 1.sh %s/" % auto_path)
 
 
 def get_log_update(cmd, logs_patg):
+    print(cmd)
     for i in range(1):
         os.system("{} > {}/{}.logs 2>&1 ".format(
             cmd, logs_patg, time.strftime( \
@@ -38,7 +39,7 @@ path = os.path.join(CURPATH, "update")
 os.makedirs(path, exist_ok=True)
 make_path = auto_path + "/1.sh"
 make_path += "%s make update" % auto_path
-# get_log_update(make_path, path)
+get_log_update(make_path, path)
 
 
 def get_log_status(cmd, logs_patg):
@@ -56,7 +57,7 @@ path = os.path.join(CURPATH, "status_log")
 os.makedirs(path, exist_ok=True)
 make_path = auto_path + '/1.sh'
 make_path += " %s make status" % auto_path
-# get_log_status(make_path, path)
+get_log_status(make_path, path)
 
 
 test_cmd = ["make httpd", "make nginx", "make memcached", "make redis", "make php", "make python", "make node",
