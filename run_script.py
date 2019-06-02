@@ -59,7 +59,8 @@ make_path += " %s make status" % auto_path
 # get_log_status(make_path, path)
 
 
-test_cmd = ["make httpd", "make nginx"]
+test_cmd = ["make httpd", "make nginx", "make memcached", "make redis", "make php", "make python", "make node",
+            "make golang", "make openjdk", "make ruby", "make tensorflow"]
 
 
 def get_log_test(cmd, logs_patg):

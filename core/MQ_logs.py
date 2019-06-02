@@ -1655,9 +1655,9 @@ def StaClrRuby(lines):
 
 
 def main():
-    # file_name = 'test_LOG.log'
+    file_name = 'test_LOG.log'
     status_log = 'status_LOG.log'
-    # test = read_logs(file_name)
+    test = read_logs(file_name)
     status = read_status_logs(status_log)
     # default_from_httpd(test)
     # default_from_nginx(test)
