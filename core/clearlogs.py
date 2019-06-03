@@ -133,23 +133,20 @@ class ClrMemcached(ClrTestLog):
             if i.startswith("Sets"):
                 num = re.findall("---|\d+\.?\d*", i)
                 self.exception_to_response(num, "clearlinux memcached:Sets")
-                num[-1] += " KB/sec"
                 data.get("clear").get("memcached").update(
-                    {"Sets": num[-2:]})
+                    {"Sets": ["Latency:" + num[-2], num[-1] + " KB/sec"]})
 
             if i.startswith("Gets"):
                 num = re.findall("---|\d+\.?\d*", i)
                 self.exception_to_response(num, "clearlinux memcached:Gets")
-                num[-1] += " KB/sec"
                 data.get("clear").get("memcached").update(
-                    {"Gets": num[-2:]})
+                    {"Gets": ["Latency:" + num[-2], num[-1] + " KB/sec"]})
 
             if i.startswith("Totals"):
                 num = re.findall("---|\d+\.?\d*", i)
                 self.exception_to_response(num, "clearlinux memcached:Totals")
-                num[-1] += " KB/sec"
                 data.get("clear").get("memcached").update(
-                    {"Totals": num[-2:]})
+                    {"Totals": ["Latency:" + num[-2], num[-1] + " KB/sec"]})
 
         with open("data.json", 'w') as f:
             json.dump(data, f)
@@ -622,6 +619,3 @@ class ClrRuby(ClrTestLog):
 
         with open("data.json", 'w') as f:
             json.dump(data, f)
-
-
-
