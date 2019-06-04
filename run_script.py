@@ -39,7 +39,7 @@ def get_log_update(cmd, logs_patg):
 path = os.path.join(CURPATH, "update")
 os.makedirs(path, exist_ok=True)
 make_path = auto_path + "/1.sh"
-make_path += "%s make update" % auto_path
+make_path += " %s make update" % auto_path
 get_log_update(make_path, path)
 
 
@@ -127,7 +127,7 @@ def anlies():
                 for files in os.listdir(log):
                     p = os.path.join(log, files)
                     ConfManagement().set_ini(session="TEST_LOG_PATH", value=p)
-                    exect_contest(DefMemcached.serialization)
+                    exect_contest(DefMemcached().serialization)
                     exect_contest(ClrMemcached().serialization)
 
             if "redis" in log:
