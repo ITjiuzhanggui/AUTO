@@ -61,22 +61,7 @@ make_path += " %s make status" % auto_path
 get_log_status(make_path, path)
 
 
-test_cmd = ["make httpd", "make nginx", "make memcached", "make redis", "make php", "make python", "make node",
-            "make golang", "make openjdk", "make ruby", "make tensorflow"]
-
-
-def get_log_test(cmd, logs_patg):
-    print(cmd)
-    for i in range(1):
-        os.system("{} > {}/{}.logs 2>&1 ".format(
-            cmd, logs_patg, time.strftime( \
-                "%Y-%m-%d-%H:%M:%S", \
-                time.localtime()).replace(' ', ':'). \
-                replace(':', ':'))
-        )
-
-
-def anlies():
+def analy_status():
     list = os.listdir(CURPATH)
     if "status_log" in list:
         logs = os.path.join(CURPATH, "status_log")
@@ -104,6 +89,30 @@ def anlies():
             exect_contest(StaDefRuby().serialization)
             exect_contest(StaClrRuby().serialization)
 
+        os.system("cp data.json %s" % (JSON_STATUS_PATH + "/%d.json" % int(time.time())))
+        os.system("cp ini_data.json data.json")
+
+
+analy_status()
+print("Successfully written：status_json")
+
+test_cmd = ["make httpd", "make nginx", "make memcached", "make redis", "make php", "make python", "make node",
+            "make golang", "make openjdk", "make ruby", "make tensorflow"]
+
+
+def get_log_test(cmd, logs_patg):
+    print(cmd)
+    for i in range(1):
+        os.system("{} > {}/{}.logs 2>&1 ".format(
+            cmd, logs_patg, time.strftime( \
+                "%Y-%m-%d-%H:%M:%S", \
+                time.localtime()).replace(' ', ':'). \
+                replace(':', ':'))
+        )
+
+
+def analy_test():
+    list = os.listdir(CURPATH)
     if "test_log" in list:
         logs = os.path.join(CURPATH, "test_log")
         for i in os.listdir(logs):
@@ -191,7 +200,8 @@ for i in test_cmd:
     make_path += " {} {} ".format(auto_path, i)
     get_log_test(make_path, path)
 
-anlies()
+analy_test()
+print("Successfully written：test_json")
 
 sh = auto_path + '/1.sh'
 os.system("rm %s" % sh)

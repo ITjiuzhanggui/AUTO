@@ -107,7 +107,6 @@ def anlies():
         os.system("cp data.json %s" % (JSON_STATUS_PATH + "/%d.json" % int(time.time())))
         os.system("cp ini_data.json data.json")
 
-
     if "test_log" in list:
         logs = os.path.join(CURPATH, "test_log")
         for i in os.listdir(logs):
