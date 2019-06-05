@@ -8,8 +8,8 @@ class ClrTestLog(Global):
 
     def __init__(self):
         super(ClrTestLog, self).__init__()
-        test_logpath = ConfManagement().get_ini("TEST_LOG_PATH")
-        self.test_log = self.read_logs(test_logpath)
+        test_log_path = ConfManagement().get_ini("TEST_LOG_PATH")
+        self.test_log = self.read_logs(test_log_path)
 
         with open('data.json', 'r') as f:
             self.data = json.load(f)
